@@ -1,8 +1,8 @@
 export type Version = 'v1' | 'v2'
 
 const versions: { id: Version; label: string; kicker: string }[] = [
-  { id: 'v1', label: 'Editorial Report', kicker: 'V1' },
   { id: 'v2', label: 'The Window',       kicker: 'V2' },
+  { id: 'v1', label: 'Editorial Report', kicker: 'V1' },
 ]
 
 export default function VersionSwitcher({

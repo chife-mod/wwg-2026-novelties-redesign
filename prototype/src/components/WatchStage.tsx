@@ -1,146 +1,153 @@
 import { useEffect, useRef, useState } from 'react'
-import { topWatches, dialColors, diameters, prices } from '../data'
+import { topCollections, TOTAL_COLLECTIONS } from '../data'
+import { BrandMonogram, DeltaChip } from './common'
 import watchPhoto from '../assets/iwc-pilot-chrono.png'
 
-const fmtPrice = (n: number) =>
-  n >= 1000 ? `$${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}K` : `$${n.toLocaleString()}`
+// ——————————————————————————————————————— modal
 
-// ——————————————————————————————————————— fair-level highlights
-const dialTotal = dialColors.reduce((a, b) => a + b.count, 0)
-const leadDial = dialColors[0]
-const dialShare = Math.round((leadDial.count / dialTotal) * 100)
-const peakD = diameters.reduce((a, b) => (b.count > a.count ? b : a))
-const peakP = prices.reduce((a, b) => (b.count > a.count ? b : a))
+function ShowMoreModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
 
-const HIGHLIGHTS = [
-  { kicker: 'Dial', value: leadDial.name, meta: `${dialShare}% of fair`, swatch: leadDial.hex },
-  { kicker: 'Wrist', value: `${peakD.mm} mm`, meta: 'peak diameter' },
-  { kicker: 'Tier', value: peakP.short, meta: 'sweet spot' },
-] as const
+  const max = topCollections[0].count
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-8 backdrop-blur-md"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="relative w-full max-w-[780px] rounded-sm bg-paper p-8 text-ink shadow-[0_40px_80px_rgba(0,0,0,0.55)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-ink/15 text-ink transition hover:border-ink hover:bg-ink hover:text-paper"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+        </button>
+
+        <div className="text-[11px] font-semibold uppercase tracking-eyebrow text-gold">Watches &amp; Wonders 2026</div>
+        <div className="mt-2 flex items-baseline justify-between gap-8">
+          <h3 className="text-[28px] font-light leading-tight text-ink">All top collections</h3>
+          <div className="text-right">
+            <div className="num text-[28px] font-light leading-none text-ink">{TOTAL_COLLECTIONS}</div>
+            <div className="text-[10px] uppercase tracking-eyebrow text-mute-3">active lines</div>
+          </div>
+        </div>
+
+        <table className="mt-6 w-full text-[12px]">
+          <thead>
+            <tr className="border-y border-ink/10 text-[9px] uppercase tracking-eyebrow text-mute-3">
+              <th className="w-8 py-2 text-left font-medium">#</th>
+              <th className="py-2 text-left font-medium">Collection</th>
+              <th className="w-[180px] py-2 text-left font-medium">Share</th>
+              <th className="w-14 py-2 text-right font-medium">Pieces</th>
+              <th className="w-14 py-2 text-right font-medium">YoY</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-ink/5">
+            {topCollections.map((c, i) => (
+              <tr key={c.fullName} className="group">
+                <td className="num py-3 text-mute-3">{String(i + 1).padStart(2, '0')}</td>
+                <td className="py-3">
+                  <div className="flex items-center gap-3">
+                    <BrandMonogram name={c.brand} size={24} />
+                    <div className="min-w-0">
+                      <div className="text-[13px] font-medium text-ink">{c.name}</div>
+                      <div className="text-[10px] uppercase tracking-eyebrow text-mute-3">{c.brand}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="py-3">
+                  <div className="h-[3px] w-full overflow-hidden rounded-full bg-ink/5">
+                    <div className="h-full rounded-full bg-gold" style={{ width: `${(c.count / max) * 100}%` }} />
+                  </div>
+                </td>
+                <td className="num py-3 text-right tabular-nums text-ink">{c.count}</td>
+                <td className="py-3 text-right"><DeltaChip delta={c.delta} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="mt-5 flex items-center justify-between text-[10px] uppercase tracking-eyebrow text-mute-3">
+          <span>Source · Watch360 analytics</span>
+          <a href="#" className="text-gold hover:underline">Open ranked collections →</a>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // ——————————————————————————————————————— stage
 
-export default function WatchStage() {
+export default function CollectionStage() {
   const [idx, setIdx] = useState(0)
   const [paused, setPaused] = useState(false)
-  const total = topWatches.length
+  const [showModal, setShowModal] = useState(false)
+  const total = topCollections.length
   const timer = useRef<number | null>(null)
-  const w = topWatches[idx]
+  const c = topCollections[idx]
 
   useEffect(() => {
-    if (paused) return
+    if (paused || showModal) return
     timer.current = window.setTimeout(() => setIdx((i) => (i + 1) % total), 9000)
     return () => {
       if (timer.current) window.clearTimeout(timer.current)
     }
-  }, [idx, paused, total])
+  }, [idx, paused, showModal, total])
 
   const prev = () => setIdx((i) => (i - 1 + total) % total)
   const next = () => setIdx((i) => (i + 1) % total)
 
   return (
-    <div
-      className="relative flex h-full flex-col"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      {/* ———————— TOP: heading + three fair highlights ———————— */}
-      <header className="pb-5">
-        <div className="flex items-center gap-2 text-[9px] uppercase tracking-eyebrow text-gold">
-          <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-          <span>The stage</span>
-        </div>
-        <h2 className="mt-3 text-[26px] font-light leading-[1.1] text-paper">
-          Three signals that<br />shape the fair
-        </h2>
-        <div className="mt-5 grid grid-cols-3 gap-3">
-          {HIGHLIGHTS.map((h) => (
-            <div key={h.kicker} className="border-l border-gold/40 pl-2.5">
-              <div className="text-[8px] font-semibold uppercase tracking-eyebrow text-gold">{h.kicker}</div>
-              <div className="mt-1 flex items-center gap-1.5">
-                {'swatch' in h && h.swatch && (
-                  <span className="h-2.5 w-2.5 rounded-full border border-white/30" style={{ background: h.swatch }} />
-                )}
-                <div className="num text-[15px] font-semibold leading-tight text-paper">{h.value}</div>
-              </div>
-              <div className="mt-0.5 text-[9px] uppercase tracking-eyebrow text-mute-3">{h.meta}</div>
-            </div>
-          ))}
-        </div>
-      </header>
-
-      {/* ———————— MID: kicker + watch photo + dark plaque ———————— */}
-      <div className="relative flex min-h-0 flex-1 flex-col">
-        <div className="flex items-center justify-between text-[10px] uppercase tracking-eyebrow text-mute-2">
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            <span>
-              Top <span className="num text-gold">{String(idx + 1).padStart(2, '0')}</span>
-              <span className="text-mute-3"> of {String(total).padStart(2, '0')}</span> · most discussed
-            </span>
-          </div>
-        </div>
-
-        <div className="relative mt-2 flex min-h-0 flex-1 items-center justify-center overflow-visible">
+    <>
+      <div
+        className="relative flex h-full flex-col"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* huge photo — fills top */}
+        <div className="relative flex min-h-0 flex-1 items-center justify-center">
           <img
             src={watchPhoto}
-            alt={`${w.brand} ${w.model}`}
-            className="h-full max-h-[520px] w-auto object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.55)]"
+            alt={`${c.brand} ${c.name} — representative`}
+            className="h-full max-h-[620px] w-auto object-contain drop-shadow-[0_60px_70px_rgba(0,0,0,0.65)]"
           />
+        </div>
 
-          {/* dark plaque overlapping watch, lower-left */}
-          <div
-            className="pointer-events-none absolute bottom-2 left-0 w-[188px] rounded-sm border border-white/10 px-3.5 py-3 text-paper backdrop-blur-md"
-            style={{ background: 'rgba(14,8,4,0.85)', boxShadow: '0 24px 50px rgba(0,0,0,0.5)' }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[8px] font-semibold uppercase tracking-eyebrow text-mute-2">Spec</span>
-              <span className="rounded-sm bg-gold px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-eyebrow text-ink-deep">
-                Pick {String(idx + 1).padStart(2, '0')}
-              </span>
-            </div>
-            <dl className="mt-2.5 space-y-1.5 text-[10px]">
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-mute-3">Dial</dt>
-                <dd className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full border border-white/30" style={{ background: w.dialHex }} />
-                  <span className="text-paper">{w.dial}</span>
-                </dd>
-              </div>
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-mute-3">Case</dt>
-                <dd className="text-paper">
-                  <span className="num">{w.caseDiameter}</span>
-                  <span className="text-mute-2"> · {w.caseMaterial.split(' · ')[0]}</span>
-                </dd>
-              </div>
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-mute-3">Strap</dt>
-                <dd className="truncate text-paper">{w.strap}</dd>
-              </div>
-            </dl>
+        {/* kicker below photo */}
+        <div className="mt-6 flex items-center justify-between border-t border-white/20 pt-4 text-[11px] uppercase tracking-eyebrow text-mute-2">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+            <span>Top collection</span>
+          </div>
+          <div className="num tabular-nums">
+            <span className="text-gold">{String(idx + 1).padStart(2, '0')}</span>
+            <span className="text-mute-3"> / {String(total).padStart(2, '0')}</span>
           </div>
         </div>
-      </div>
 
-      {/* ———————— BOTTOM: name + ref + arrows + dots ———————— */}
-      <footer className="mt-4 border-t border-white/10 pt-4">
-        <div className="flex items-end justify-between gap-4">
+        {/* info block — logo + collection name + arrows */}
+        <div className="mt-4 flex items-center gap-4">
+          <BrandMonogram name={c.brand} size={40} />
           <div className="min-w-0 flex-1">
-            <div className="text-[10px] font-semibold uppercase tracking-eyebrow text-gold">{w.brand}</div>
-            <h3 className="mt-1 text-[24px] font-light leading-[1.1] text-paper">{w.model}</h3>
-            <div className="mt-2 flex items-center gap-2 text-[11px]">
-              <span className="num tabular-nums text-mute-2">{w.reference}</span>
-              <span className="h-1 w-1 rounded-full bg-mute-3" />
-              <span className="num font-semibold text-paper">{fmtPrice(w.priceUsd)}</span>
-            </div>
+            <div className="text-[11px] font-semibold uppercase tracking-eyebrow text-gold">{c.brand}</div>
+            <div className="truncate text-[22px] font-light leading-tight text-paper">{c.name}</div>
           </div>
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={prev}
               aria-label="Previous"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-paper transition hover:border-gold hover:bg-gold hover:text-ink-deep"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-paper transition hover:border-gold hover:bg-gold hover:text-ink-deep"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
@@ -148,25 +155,24 @@ export default function WatchStage() {
               type="button"
               onClick={next}
               aria-label="Next"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-paper transition hover:border-gold hover:bg-gold hover:text-ink-deep"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-paper transition hover:border-gold hover:bg-gold hover:text-ink-deep"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-1">
-          {topWatches.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIdx(i)}
-              className={`h-[2px] flex-1 rounded-full transition-colors ${i === idx ? 'bg-gold' : 'bg-white/15 hover:bg-white/30'}`}
-              aria-label={`Slide ${i + 1}`}
-            />
-          ))}
-        </div>
-      </footer>
-    </div>
+        {/* show all — subtle link */}
+        <button
+          type="button"
+          onClick={() => setShowModal(true)}
+          className="mt-4 self-start text-[10px] font-semibold uppercase tracking-eyebrow text-gold transition hover:text-gold-light"
+        >
+          View all {TOTAL_COLLECTIONS} →
+        </button>
+      </div>
+
+      {showModal && <ShowMoreModal onClose={() => setShowModal(false)} />}
+    </>
   )
 }

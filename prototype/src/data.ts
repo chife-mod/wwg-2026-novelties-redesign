@@ -156,6 +156,29 @@ export const editions: Ranked[] = [
   { name: 'Partnership Edition', count: 11 },
 ]
 
+// Top collections — structured for the V2 slider (brand/name split)
+export type TopCollection = {
+  brand: string
+  name: string
+  fullName: string
+  count: number
+  delta: number
+  note?: string
+}
+
+export const topCollections: TopCollection[] = [
+  { brand: 'Rolex',          name: 'Datejust',            fullName: 'Rolex Datejust',            count: 41, delta: 12, note: 'Flagship line doubles down on jubilee dials' },
+  { brand: 'Tudor',          name: 'Royal',               fullName: 'Tudor Royal',               count: 23, delta:  5, note: 'Chronograph additions across the range' },
+  { brand: 'Bulgari',        name: 'Serpenti',            fullName: 'Bulgari Serpenti',          count: 12, delta:  1, note: 'High jewellery seduttori expansions' },
+  { brand: 'Eberhard & Co.', name: 'Scafograf',           fullName: 'Eberhard & Co. Scafograf',  count: 12, delta: -1, note: 'Dive-tool line back with titanium' },
+  { brand: 'Hublot',         name: 'Big Bang',            fullName: 'Hublot Big Bang',           count: 12, delta:  0, note: 'Unico movement broadens colourways' },
+  { brand: 'Piaget',         name: 'Polo',                fullName: 'Piaget Polo',               count: 11, delta:  3, note: 'Slim date variants in steel and gold' },
+  { brand: 'Rolex',          name: 'Oyster Perpetual',    fullName: 'Rolex Oyster Perpetual',    count: 11, delta:  2, note: 'Classic three-hander keeps expanding dials' },
+  { brand: 'Patek Philippe', name: 'Grand Complications', fullName: 'Patek Philippe Grand Compl.', count: 9, delta: -4, note: 'Fewer but more intricate references' },
+  { brand: 'Chanel',         name: 'J12',                 fullName: 'Chanel J12',                count:  8, delta:  1, note: 'Ceramic monochrome continues' },
+  { brand: 'Cartier',        name: 'Roadster',            fullName: 'Cartier Roadster',          count:  7, delta:  2, note: 'Revived cushion-tonneau silhouette' },
+]
+
 // Top 10 models — for V2 FairWindow slider.
 // All values are plausible placeholders (model, reference, price) — not authoritative.
 export type TopWatch = {

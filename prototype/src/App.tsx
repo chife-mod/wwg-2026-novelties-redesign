@@ -10,9 +10,9 @@ import ByTheNumbers from './components/ByTheNumbers'
 import FooterStrip from './components/FooterStrip'
 import VersionSwitcher, { type Version } from './components/VersionSwitcher'
 import { FairBackdrop } from './components/FairWindow'
-import WatchStage from './components/WatchStage'
+import CollectionStage from './components/WatchStage'
 import V2RightGrid from './components/V2RightGrid'
-import { brands, collections, TOTAL_BRANDS, TOTAL_COLLECTIONS } from './data'
+import { brands, collections, TOTAL_BRANDS, TOTAL_COLLECTIONS, TOTAL_NOVELTIES } from './data'
 
 function V1() {
   return (
@@ -33,36 +33,56 @@ function V1() {
 
 function V2Hero() {
   return (
-    <section className="relative isolate overflow-hidden text-paper" style={{ background: '#1F140C' }}>
-      <FairBackdrop />
-      {/* top meta strip: LIVE, Geneva */}
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-20">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-8 pt-6">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 rounded-full bg-ink-deep/85 px-3 py-1.5 backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-eyebrow text-paper">Live</span>
-            </div>
-            <div className="rounded-full bg-ink-deep/85 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow text-paper backdrop-blur-sm">
-              Geneva · Hall 1
-            </div>
-            <div className="rounded-full bg-ink-deep/85 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow text-paper backdrop-blur-sm">
-              Day 2 of 5
-            </div>
-          </div>
-          <div className="rounded-full border border-white/10 bg-ink-deep/60 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow text-mute-2 backdrop-blur-sm">
-            Watches &amp; Wonders 2026
-          </div>
-        </div>
+    <section className="relative text-paper" style={{ background: '#1F140C' }}>
+      {/* ambient backdrop pinned to first viewport */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[100vh] overflow-hidden">
+        <FairBackdrop />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-[1440px] px-8 pb-12 pt-20">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[340px_1fr]" style={{ minHeight: 820 }}>
-          <WatchStage />
-          <V2RightGrid />
+      <div className="relative z-10 mx-auto max-w-[1440px] px-8">
+        {/* top meta strip */}
+        <div className="flex flex-wrap items-center gap-2 pt-6">
+          <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-eyebrow">Watches &amp; Wonders Live</span>
+          </div>
+          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
+          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
+          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Day 2 of 5</div>
+        </div>
+
+        {/* H1 + totals in one row */}
+        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[480px_minmax(0,1fr)]">
+          <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
+            Novelties
+          </h1>
+          <div className="grid grid-cols-3 gap-8">
+            <div className="border-l border-white/25 pl-4">
+              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_NOVELTIES}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">novelties on show</div>
+            </div>
+            <div className="border-l border-white/25 pl-4">
+              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_BRANDS}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">maisons</div>
+            </div>
+            <div className="border-l border-white/25 pl-4">
+              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_COLLECTIONS}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">collections</div>
+            </div>
+          </div>
+        </div>
+
+        {/* main grid — sticky left + scrolling right */}
+        <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[480px_minmax(0,1fr)]">
+          <aside className="lg:sticky lg:top-20 lg:self-start" style={{ maxHeight: 'calc(100vh - 96px)' }}>
+            <CollectionStage />
+          </aside>
+          <div className="min-w-0">
+            <V2RightGrid />
+          </div>
         </div>
       </div>
     </section>
@@ -70,16 +90,7 @@ function V2Hero() {
 }
 
 function V2() {
-  return (
-    <>
-      <V2Hero />
-      <HeadlineInsights />
-      <PriceCurve />
-      <DialPalette />
-      <DiameterRuler />
-      <ByTheNumbers />
-    </>
-  )
+  return <V2Hero />
 }
 
 export default function App() {
