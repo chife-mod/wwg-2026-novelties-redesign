@@ -33,7 +33,7 @@ function V1() {
 
 function V2Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-ink-deep text-paper">
+    <section className="relative isolate overflow-hidden text-paper" style={{ background: '#1F140C' }}>
       <FairBackdrop />
       {/* top meta strip: LIVE, Geneva */}
       <div className="pointer-events-none absolute left-0 right-0 top-0 z-20">

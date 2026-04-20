@@ -8,28 +8,28 @@ import { TOTAL_NOVELTIES, TOTAL_BRANDS, TOTAL_COLLECTIONS } from '../data'
 export function FairBackdrop() {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* base scene */}
+      {/* base scene — dark chocolate */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(160deg, #1E1D19 0%, #2A2924 38%, #1A1914 70%, #0F0E0B 100%)',
+            'linear-gradient(160deg, #2A1C12 0%, #3A2618 38%, #1F140C 72%, #0F0906 100%)',
         }}
       />
       {/* warm stage pool */}
       <div
-        className="absolute -top-24 left-[10%] h-[70%] w-[60%] rounded-full opacity-60 blur-3xl"
+        className="absolute -top-24 left-[10%] h-[70%] w-[60%] rounded-full opacity-70 blur-3xl"
         style={{
           background:
-            'radial-gradient(closest-side, rgba(212,158,100,0.35), rgba(212,158,100,0.06) 60%, transparent 100%)',
+            'radial-gradient(closest-side, rgba(212,158,100,0.40), rgba(212,158,100,0.08) 60%, transparent 100%)',
         }}
       />
-      {/* cold spot */}
+      {/* second warm pool, lower-right */}
       <div
-        className="absolute bottom-0 right-[8%] h-[55%] w-[45%] rounded-full opacity-40 blur-3xl"
+        className="absolute bottom-0 right-[6%] h-[55%] w-[45%] rounded-full opacity-40 blur-3xl"
         style={{
           background:
-            'radial-gradient(closest-side, rgba(120,140,170,0.22), rgba(30,60,100,0.05) 55%, transparent 100%)',
+            'radial-gradient(closest-side, rgba(169,129,85,0.35), rgba(139,99,55,0.08) 55%, transparent 100%)',
         }}
       />
       {/* soft floor line */}
