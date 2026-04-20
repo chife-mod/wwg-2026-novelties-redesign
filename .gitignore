@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+build/
+
+# editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.log
+
+# env
+.env
+.env.local
+
+# scraped original page — not ours to re-host
+HTML/
