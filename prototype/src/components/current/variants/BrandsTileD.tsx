@@ -31,9 +31,18 @@ export default function BrandsTileD() {
         `display: contents` на <li> превращает детей в прямых grid-items <ul>,
         и треки колонок count/delta становятся едиными для всех 6 строк.
       */}
-      <ul className="mt-[30px] grid grid-cols-[auto_32px_minmax(0,1fr)_auto_auto] auto-rows-[minmax(32px,auto)] items-center gap-x-3 gap-y-2">
+      {/*
+        Per-row grid паттерн (как в CollectionsTileB) — каждая <li> сама
+        по себе grid с min-h-[32px]. items-center центрирует все ячейки
+        по центру 32px-строки. Это единый паттерн для всех list-тайлов,
+        чтобы выравнивание count/delta было консистентным везде.
+      */}
+      <ul className="mt-[30px] space-y-2">
         {list.map((b, i) => (
-          <li key={b.name} className="contents">
+          <li
+            key={b.name}
+            className="grid min-h-[32px] grid-cols-[auto_32px_minmax(0,1fr)_auto_auto] items-center gap-3"
+          >
             <span className="num w-6 text-[12px] tabular-nums text-mute-3">
               {String(i + 1).padStart(2, '0')}
             </span>
@@ -47,12 +56,8 @@ export default function BrandsTileD() {
                 />
               </div>
             </div>
-            <span className="num justify-self-end text-[14px] tabular-nums text-ink">
-              {b.count}
-            </span>
-            <span className="justify-self-end">
-              <DeltaChip delta={b.delta} />
-            </span>
+            <span className="num text-[14px] tabular-nums text-ink">{b.count}</span>
+            <DeltaChip delta={b.delta} />
           </li>
         ))}
       </ul>

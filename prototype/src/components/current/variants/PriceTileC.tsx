@@ -1,3 +1,5 @@
+import { DeltaChipPct } from '../../common'
+
 /**
  * Variant C — демо-карточка для выбора YoY-техники.
  *
@@ -33,30 +35,6 @@ const MAX = Math.max(UP.v25, UP.v26, DOWN.v25, DOWN.v26)
 
 const PCT_UP = Math.round(((UP.v26 - UP.v25) / UP.v25) * 100)
 const PCT_DOWN = Math.round(((DOWN.v26 - DOWN.v25) / DOWN.v25) * 100)
-
-/**
- * Percent delta chip, same visual language as common.DeltaChip, но с `%`-суффиксом.
- * Локальный — в common.tsx общий DeltaChip показывает абсолютные числа
- * (штуки часов), а здесь нужен процент (year-over-year).
- */
-function DeltaChipPct({ pct }: { pct: number }) {
-  const up = pct > 0
-  const flat = pct === 0
-  const sign = up ? '+' : flat ? '±' : ''
-  const bg = up
-    ? 'bg-success/15 text-success'
-    : flat
-    ? 'bg-ink/5 text-mute-3'
-    : 'bg-error/15 text-error'
-  return (
-    <span
-      className={`num inline-flex min-w-[42px] justify-center rounded-sm px-1.5 py-0.5 text-[11px] font-medium tabular-nums ${bg}`}
-    >
-      {sign}
-      {pct}%
-    </span>
-  )
-}
 
 export default function PriceTileC() {
   return (

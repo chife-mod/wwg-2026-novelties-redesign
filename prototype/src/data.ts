@@ -54,18 +54,21 @@ export const prices: PriceBucket[] = [
 ]
 
 // Dial colors — with actual swatch colors
-export type DialColor = { name: string; count: number; hex: string; ring?: string }
+export type DialColor = { name: string; count: number; hex: string; ring?: string; delta?: number }
+// Placeholder YoY-дельты (абсолютные штуки). Story: синий держит трон,
+// skeleton растёт на волне открытых механизмов, зелёный сползает с
+// пика 2024, белый спортивный добирает объёмы.
 export const dialColors: DialColor[] = [
-  { name: 'Blue',     count: 105, hex: '#1F3F8A' },
-  { name: 'Black',    count: 56,  hex: '#111111' },
-  { name: 'White',    count: 48,  hex: '#F4F2EE', ring: '#C6C6C6' },
-  { name: 'Skeleton', count: 39,  hex: 'url(#skeleton)' },
-  { name: 'Grey',     count: 37,  hex: '#878787' },
-  { name: 'Green',    count: 26,  hex: '#1F4E33' },
-  { name: 'Silver',   count: 24,  hex: '#D4D4D4', ring: '#B5B5B5' },
-  { name: 'Brown',    count: 18,  hex: '#5E3A1F' },
-  { name: 'Beige',    count: 15,  hex: '#D7C2A1' },
-  { name: 'Pink',     count: 10,  hex: '#E3B7BD' },
+  { name: 'Blue',     count: 105, hex: '#1F3F8A',             delta: +15 },
+  { name: 'Black',    count: 56,  hex: '#111111',             delta: -4  },
+  { name: 'White',    count: 48,  hex: '#F4F2EE', ring: '#C6C6C6', delta: +6 },
+  { name: 'Skeleton', count: 39,  hex: 'url(#skeleton)',      delta: +8  },
+  { name: 'Grey',     count: 37,  hex: '#878787',             delta: +2  },
+  { name: 'Green',    count: 26,  hex: '#1F4E33',             delta: -3  },
+  { name: 'Silver',   count: 24,  hex: '#D4D4D4', ring: '#B5B5B5', delta: +1 },
+  { name: 'Brown',    count: 18,  hex: '#5E3A1F',             delta: -2  },
+  { name: 'Beige',    count: 15,  hex: '#D7C2A1',             delta: +4  },
+  { name: 'Pink',     count: 10,  hex: '#E3B7BD',             delta: +1  },
 ]
 
 // Case diameters — top 10 of 25, as ruler bars mm → count
@@ -93,61 +96,69 @@ export const diameters: Diameter[] = [
 ]
 
 // Tier 3 — compact facets
+// Deltas placeholder: steel industrial-lux растёт, titanium тянется за
+// casual-luxury, rose gold корректируется с пика 2023-24, ceramic в рост.
 export const caseMaterials: Ranked[] = [
-  { name: 'Stainless Steel', count: 193 },
-  { name: 'Titanium', count: 56 },
-  { name: 'Rose Gold', count: 53 },
-  { name: 'White Gold', count: 35 },
-  { name: 'Ceramic', count: 24 },
-  { name: 'Yellow Gold', count: 22 },
-  { name: 'Platinum', count: 15 },
-  { name: 'Carbon', count: 10 },
-  { name: 'Red Gold', count: 6 },
-  { name: 'Gold', count: 4 },
+  { name: 'Stainless Steel', count: 193, delta: +15 },
+  { name: 'Titanium',        count: 56,  delta: +9  },
+  { name: 'Rose Gold',       count: 53,  delta: -8  },
+  { name: 'White Gold',      count: 35,  delta: -3  },
+  { name: 'Ceramic',         count: 24,  delta: +5  },
+  { name: 'Yellow Gold',     count: 22,  delta: -2  },
+  { name: 'Platinum',        count: 15,  delta: -1  },
+  { name: 'Carbon',          count: 10,  delta: +3  },
+  { name: 'Red Gold',        count: 6,   delta: -2  },
+  { name: 'Gold',            count: 4,   delta: -1  },
 ]
 
+// Deltas placeholder: date/sweeping — market default, растут; moon phase
+// и chronograph слабеют после post-pandemic бума; tourbillon стабильно niche.
 export const functions: Ranked[] = [
-  { name: 'Date', count: 210 },
-  { name: 'Sweeping Seconds', count: 156 },
-  { name: 'Hacking Seconds', count: 48 },
-  { name: 'Moon Phase', count: 18 },
-  { name: 'Chronograph', count: 16 },
-  { name: 'Power Reserve Indicator', count: 16 },
-  { name: 'Day/Night Indicator', count: 13 },
-  { name: 'Tourbillon', count: 11 },
-  { name: 'Flyback Chronograph', count: 7 },
-  { name: 'Calendar', count: 6 },
+  { name: 'Date',                     count: 210, delta: +8  },
+  { name: 'Sweeping Seconds',         count: 156, delta: +12 },
+  { name: 'Hacking Seconds',          count: 48,  delta: +3  },
+  { name: 'Moon Phase',               count: 18,  delta: -4  },
+  { name: 'Chronograph',              count: 16,  delta: -6  },
+  { name: 'Power Reserve Indicator',  count: 16,  delta: +2  },
+  { name: 'Day/Night Indicator',      count: 13,  delta: 0   },
+  { name: 'Tourbillon',               count: 11,  delta: +1  },
+  { name: 'Flyback Chronograph',      count: 7,   delta: -1  },
+  { name: 'Calendar',                 count: 6,   delta: +4  },
 ]
 
+// Deltas — placeholder YoY-изменения (абсолютные штуки, не проценты).
+// Story: steel sport растёт, rubber/titanium тянутся за casual-luxury,
+// кожа медленно отступает, rose gold сползает с пика 2023-24.
 export const strapTypes: Ranked[] = [
-  { name: 'Stainless Steel', count: 133 },
-  { name: 'Alligator', count: 76 },
-  { name: 'Rubber', count: 59 },
-  { name: 'Leather', count: 45 },
-  { name: 'Calfskin', count: 25 },
-  { name: 'Titanium', count: 23 },
-  { name: 'Rose Gold', count: 19 },
-  { name: 'Gold', count: 16 },
-  { name: 'Ceramic', count: 12 },
-  { name: 'Composite', count: 9 },
+  { name: 'Stainless Steel', count: 133, delta: +9 },
+  { name: 'Alligator',       count: 76,  delta: -3 },
+  { name: 'Rubber',          count: 59,  delta: +12 },
+  { name: 'Leather',         count: 45,  delta: -6 },
+  { name: 'Calfskin',        count: 25,  delta: +2 },
+  { name: 'Titanium',        count: 23,  delta: +5 },
+  { name: 'Rose Gold',       count: 19,  delta: -4 },
+  { name: 'Gold',            count: 16,  delta: +1 },
+  { name: 'Ceramic',         count: 12,  delta: 0 },
+  { name: 'Composite',       count: 9,   delta: +4 },
 ]
 
 export const caseHeights: Ranked[] = [
-  { name: '7 mm', count: 106 },
-  { name: '8 mm', count: 50 },
-  { name: '11 mm', count: 42 },
-  { name: '9 mm', count: 40 },
-  { name: '10 mm', count: 39 },
-  { name: '12 mm', count: 35 },
-  { name: '14 mm', count: 29 },
-  { name: '13 mm', count: 27 },
-  { name: '6 mm', count: 13 },
+  { name: '7 mm', count: 106, delta: +22 },
+  { name: '8 mm', count: 50,  delta: +6  },
+  { name: '11 mm', count: 42, delta: -8  },
+  { name: '9 mm', count: 40,  delta: +3  },
+  { name: '10 mm', count: 39, delta: -2  },
+  { name: '12 mm', count: 35, delta: -5  },
+  { name: '14 mm', count: 29, delta: -9  },
+  { name: '13 mm', count: 27, delta: -4  },
+  { name: '6 mm', count: 13,  delta: +11 },
+  { name: '15 mm', count: 11, delta: -6  },
 ]
 
 export const movements: Ranked[] = [
-  { name: 'Automatic', count: 302 },
-  { name: 'Manual', count: 124 },
-  { name: 'Quartz', count: 52 },
+  { name: 'Automatic', count: 302, delta: +18 },
+  { name: 'Manual',    count: 124, delta: +5  },
+  { name: 'Quartz',    count: 52,  delta: -9  },
 ]
 
 export const editions: Ranked[] = [

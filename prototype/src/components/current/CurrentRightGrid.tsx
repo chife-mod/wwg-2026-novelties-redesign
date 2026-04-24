@@ -3,7 +3,10 @@ import { TILES } from './tileRegistry'
 import TileShell from './TileShell'
 import Sandbox from './Sandbox'
 
-const ACTIVE_KEY = 'wwg.current.activeVariants'
+// Bumped to v2 after removing hover cycle-arrows and reshuffling tile
+// variants — старые сохранённые индексы могли указывать не на тот
+// вариант, который сейчас дефолтом на главной.
+const ACTIVE_KEY = 'wwg.current.activeVariants.v2'
 const SANDBOX_KEY = 'wwg.current.openTileId'
 
 /**
@@ -63,7 +66,7 @@ export default function CurrentRightGrid() {
     <>
       <div className="grid grid-cols-2 gap-4">
         {TILES.map((tile) => (
-          <div key={tile.id} className={tile.colSpan === 2 ? 'col-span-2' : ''}>
+          <div key={tile.id} className={`h-full ${tile.colSpan === 2 ? 'col-span-2' : ''}`}>
             <TileShell
               tile={tile}
               activeIdx={active[tile.id] ?? 0}

@@ -49,9 +49,38 @@ export function DeltaChip({ delta }: { delta?: number }) {
   const sign = up ? '+' : flat ? '±' : ''
   const bg = up ? 'bg-success/15 text-success' : flat ? 'bg-ink/5 text-mute-3' : 'bg-error/15 text-error'
   return (
-    <span className={`num inline-flex min-w-[42px] justify-center rounded-sm px-1.5 py-0.5 text-[11px] font-medium tabular-nums ${bg}`}>
+    <span className={`num inline-flex min-w-[42px] items-center justify-center rounded-sm px-1.5 py-1 text-[11px] font-medium leading-none tabular-nums ${bg}`}>
       {sign}
       {delta}
+    </span>
+  )
+}
+
+/**
+ * DeltaChipPct — та же плашка, что DeltaChip, но с `%`-суффиксом.
+ * Единый компонент для histogram-тайлов (Price/Diameter), которые
+ * показывают YoY-проценты, и для BrandsTileD1 (stress-test).
+ *
+ * Типографика и габариты (min-w 42, py-1, leading-none, items-center)
+ * ИДЕНТИЧНЫ DeltaChip — это намеренно: пользователь привыкает к одной
+ * форме дельты на всём дашборде. Меняется только контент: absolute number
+ * (DeltaChip) vs percent (DeltaChipPct).
+ */
+export function DeltaChipPct({ pct }: { pct: number }) {
+  const up = pct > 0
+  const flat = pct === 0
+  const sign = up ? '+' : flat ? '±' : ''
+  const bg = up
+    ? 'bg-success/15 text-success'
+    : flat
+    ? 'bg-ink/5 text-mute-3'
+    : 'bg-error/15 text-error'
+  return (
+    <span
+      className={`num inline-flex min-w-[42px] items-center justify-center rounded-sm px-1.5 py-1 text-[11px] font-medium leading-none tabular-nums ${bg}`}
+    >
+      {sign}
+      {pct}%
     </span>
   )
 }

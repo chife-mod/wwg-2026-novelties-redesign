@@ -21,4 +21,11 @@ html, body, #root {
 
 .num {
   font-feature-settings: 'tnum' on, 'lnum' on;
+  /* leading: 1 — чтобы line-box совпадал с font-size, а визуальный центр
+     цифры лежал в центре бокса. Это нужно для консистентного выравнивания
+     count'ов с DeltaChip (у чипа тоже leading-none + items-center), когда
+     они сидят в одной grid-строке с items-center. Без этого count с
+     default leading 1.5 имеет line-box в 1.5× font-size и digit плавает
+     в верхней части бокса → чип визуально оказывается ниже. */
+  line-height: 1;
 }

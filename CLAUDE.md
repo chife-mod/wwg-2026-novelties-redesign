@@ -122,6 +122,11 @@ Tailwind-классы: `text-gold`, `bg-ink-deep`, `text-paper`, `bg-success/15`
   с однострочным rationale. Остаются видны в sandbox, но не рендерятся на главной.
 - **Document-First остаётся** для уровня плана версии (`docs/plans/`) и концепции-идеи
   (`docs/ideas/NN/`). Decision logs живут уровнем ниже.
+- **Component consistency** — утверждённый визуальный приём живёт в `common.tsx`
+  (DeltaChip, DeltaChipPct, BrandLogo, Eyebrow, SectionTitle), тайлы импортируют.
+  Утверждённый паттерн верстки — отдельным md в `docs/principles/` (list-tile-row-pattern,
+  и т.д.). Никаких локальных копий «почти такого же компонента», никаких «почти такого же
+  паттерна в другой плитке». Меняем — меняем везде. Подробнее — `docs/principles/component-consistency.md`.
 
 ## Key decisions so far
 

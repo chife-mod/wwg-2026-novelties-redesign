@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { prices } from '../../../data'
+import { DeltaChipPct } from '../../common'
 
 /**
  * Variant D — production YoY price-range histogram.
@@ -45,33 +46,6 @@ import { prices } from '../../../data'
 
 // Placeholder 2025 counts — 11 buckets aligned with prices[] order.
 const COUNTS_2025 = [5, 18, 45, 92, 87, 55, 35, 22, 11, 6, 3]
-
-/**
- * Pct-чип для оси. Типографика совпадает с common.DeltaChip
- * (brands/collections): text-[11px], font-medium, min-w-[42px],
- * px-1.5 py-0.5. Отличается только `%`-суффиксом — здесь YoY
- * проценты, там абсолютные штуки. Раньше был ужат до 10px/min-34
- * «чтоб влезть в узкую колонку» — ломало общий typographic rhythm
- * дашборда. Колонка вмещает 42px, если данные 2-значные.
- */
-function DeltaChipPct({ pct }: { pct: number }) {
-  const up = pct > 0
-  const flat = pct === 0
-  const sign = up ? '+' : flat ? '±' : ''
-  const bg = up
-    ? 'bg-success/15 text-success'
-    : flat
-    ? 'bg-ink/5 text-mute-3'
-    : 'bg-error/15 text-error'
-  return (
-    <span
-      className={`num inline-flex min-w-[42px] justify-center rounded-sm px-1.5 py-0.5 text-[11px] font-medium tabular-nums ${bg}`}
-    >
-      {sign}
-      {pct}%
-    </span>
-  )
-}
 
 export default function PriceTileD() {
   const counts26 = prices.map((p) => p.count)

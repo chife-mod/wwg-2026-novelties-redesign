@@ -13,6 +13,8 @@ import { FairBackdrop } from './components/FairWindow'
 import CollectionStage from './components/WatchStage'
 import V2RightGrid from './components/V2RightGrid'
 import CurrentRightGrid from './components/current/CurrentRightGrid'
+import BrandsTileD from './components/current/variants/BrandsTileD'
+import BrandsTileD1 from './components/current/variants/BrandsTileD1'
 import { brands, collections, TOTAL_BRANDS, TOTAL_COLLECTIONS, TOTAL_NOVELTIES } from './data'
 
 function V1() {
@@ -156,7 +158,36 @@ function Current() {
   return <CurrentHero />
 }
 
+// Preview-route для экспорта в Figma: ?preview=brands-d рендерит
+// одну плитку BrandsTileD на тёмном фоне (чтобы shadow читалась),
+// без nav/hero/switcher. Ширина колонки ≈ реальная на дашборде
+// (~480 при 2-col grid и padding).
+function previewFromUrl(): string | null {
+  if (typeof window === 'undefined') return null
+  return new URLSearchParams(window.location.search).get('preview')
+}
+
 export default function App() {
+  const preview = previewFromUrl()
+  if (preview === 'brands-d') {
+    return (
+      <div className="min-h-screen bg-ink-deep p-10">
+        <div className="mx-auto" style={{ width: 480 }}>
+          <BrandsTileD />
+        </div>
+      </div>
+    )
+  }
+  if (preview === 'brands-d1') {
+    return (
+      <div className="min-h-screen bg-ink-deep p-10">
+        <div className="mx-auto" style={{ width: 480 }}>
+          <BrandsTileD1 />
+        </div>
+      </div>
+    )
+  }
+
   const [version, setVersion] = useState<Version>('current')
 
   useEffect(() => {

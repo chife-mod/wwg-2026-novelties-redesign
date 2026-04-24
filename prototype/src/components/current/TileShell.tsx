@@ -4,13 +4,16 @@ import type { TileEntry } from './tileRegistry'
  * Wraps a tile variant in the main grid.
  * - Click anywhere on the shell → opens sandbox for that tile.
  * - Hover → cursor-zoom-in + subtle gold outline.
- * - If the tile has >1 variant: prev/next arrows fade in on the sides (stopPropagation, do not open sandbox).
+ *
+ * Hover arrows для переключения вариантов были отключены (2026-04-24):
+ * путают при демонстрации — стандартное поведение «кликаю по плитке,
+ * попадаю в sandbox» достаточно. Переключение вариантов живёт ТОЛЬКО
+ * в sandbox'е. Чтобы вернуть стрелки — restore блок ниже и проп onCycle.
  */
 export default function TileShell({
   tile,
   activeIdx,
   onOpen,
-  onCycle,
 }: {
   tile: TileEntry
   activeIdx: number
@@ -19,11 +22,10 @@ export default function TileShell({
 }) {
   const variant = tile.variants[activeIdx] ?? tile.variants[0]
   const Variant = variant.component
-  const hasSiblings = tile.variants.length > 1
 
   return (
     <div
-      className="group relative cursor-zoom-in rounded-sm transition-shadow focus-within:ring-2 focus-within:ring-gold/60 hover:ring-2 hover:ring-gold/40"
+      className="group relative h-full cursor-zoom-in rounded-sm transition-shadow focus-within:ring-2 focus-within:ring-gold/60 hover:ring-2 hover:ring-gold/40"
       onClick={onOpen}
       role="button"
       tabIndex={0}
@@ -41,16 +43,15 @@ export default function TileShell({
         Open sandbox →
       </div>
 
-      {/* hover arrows — only if > 1 variant */}
-      {hasSiblings && (
+      {/* Hover cycle-arrows temporarily disabled — see file-level comment.
+          Restore by un-commenting the block and destructuring `onCycle` above.
+
+      {tile.variants.length > 1 && (
         <>
           <button
             type="button"
             aria-label="Previous variant"
-            onClick={(e) => {
-              e.stopPropagation()
-              onCycle(-1)
-            }}
+            onClick={(e) => { e.stopPropagation(); onCycle(-1) }}
             className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-ink-deep/80 text-paper opacity-0 backdrop-blur-sm transition-opacity hover:border-gold hover:bg-gold hover:text-ink-deep group-hover:opacity-100"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -58,16 +59,13 @@ export default function TileShell({
           <button
             type="button"
             aria-label="Next variant"
-            onClick={(e) => {
-              e.stopPropagation()
-              onCycle(1)
-            }}
+            onClick={(e) => { e.stopPropagation(); onCycle(1) }}
             className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-ink-deep/80 text-paper opacity-0 backdrop-blur-sm transition-opacity hover:border-gold hover:bg-gold hover:text-ink-deep group-hover:opacity-100"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </button>
         </>
-      )}
+      )} */}
     </div>
   )
 }
