@@ -27,7 +27,7 @@ export default function PriceTileB() {
   return (
     <article className="rounded-sm border border-ink/5 bg-white p-6 shadow-[0_20px_40px_rgba(0,0,0,0.22)]">
       <h3 className="text-[18px] font-bold leading-[1.3] tracking-[-0.005em] text-ink">
-        Where the money lands
+        Price ranges
       </h3>
 
       {/* bars */}

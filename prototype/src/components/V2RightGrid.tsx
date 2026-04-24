@@ -145,7 +145,7 @@ export function PriceTile() {
   const below = prices.slice(0, leadIdx).reduce((a, b) => a + b.count, 0)
   const above = prices.slice(leadIdx + 1).reduce((a, b) => a + b.count, 0)
   return (
-    <Tile kicker="Price" title="Where the money lands" total={lead.short} totalLabel={`peak · ${sweetShare}%`}>
+    <Tile kicker="Price" title="Price ranges" total={lead.short} totalLabel={`peak · ${sweetShare}%`}>
       {/* elegant chunky bars */}
       <div className="relative h-52 pt-10">
         {/* peak tooltip */}

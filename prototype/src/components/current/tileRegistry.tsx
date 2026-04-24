@@ -72,7 +72,7 @@ export const TILES: TileEntry[] = [
   },
   {
     id: 'price',
-    label: 'Where the money lands',
+    label: 'Price ranges',
     kicker: 'Price',
     colSpan: 2,
     // Дефолт на морде — D (production YoY с dot+gold line техникой).

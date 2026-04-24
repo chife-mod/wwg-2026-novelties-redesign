@@ -1,4 +1,4 @@
-# Price (Where the money lands)
+# Price ranges
 
 **Problem.** Оригинальная (A) плитка — 11 толстых ink-баров без YoY-сравнения, peak ранжировал через оттенки серого + gold (peak/near/far), но сама story «рынок сместился на mid-luxury» была невидима: где был пик в 2025 → где стал в 2026.
 

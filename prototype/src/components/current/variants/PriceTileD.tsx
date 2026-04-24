@@ -96,7 +96,7 @@ export default function PriceTileD() {
     <article className="rounded-sm border border-ink/5 bg-white p-6 shadow-[0_20px_40px_rgba(0,0,0,0.22)]">
       <header className="flex items-start justify-between">
         <h3 className="text-[16px] font-bold uppercase leading-[1.3] tracking-[0.01em] text-gold">
-          Where the money lands
+          Price ranges
         </h3>
         <div className="flex items-center gap-5 text-[11px] font-semibold uppercase tracking-eyebrow text-mute-3">
           <span className="flex items-center gap-2">
