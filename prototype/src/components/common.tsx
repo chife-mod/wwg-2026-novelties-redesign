@@ -130,7 +130,7 @@ export function BrandLogo({ name, size = 28 }: { name: string; size?: number }) 
       style={{ width: size, height: size }}
     >
       <img
-        src={`/assets/logos/${logo.file}`}
+        src={`${import.meta.env.BASE_URL}assets/logos/${logo.file}`}
         alt={name}
         className="max-h-full max-w-full object-contain"
         loading="lazy"
