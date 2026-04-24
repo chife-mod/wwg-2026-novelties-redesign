@@ -146,7 +146,7 @@ function V2Hero() {
             <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
             <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
           </div>
-          <div className="flex justify-start lg:justify-start">
+          <div className="flex justify-start lg:justify-end">
             <ViewModeToggle />
           </div>
         </div>
@@ -207,7 +207,7 @@ function CurrentHero() {
             <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
             <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
           </div>
-          <div className="flex justify-start lg:justify-start">
+          <div className="flex justify-start lg:justify-end">
             <ViewModeToggle />
           </div>
         </div>
