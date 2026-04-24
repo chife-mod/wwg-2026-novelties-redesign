@@ -47,8 +47,12 @@ import { prices } from '../../../data'
 const COUNTS_2025 = [5, 18, 45, 92, 87, 55, 35, 22, 11, 6, 3]
 
 /**
- * Компактный pct-чип для оси. Копия паттерна из PriceTileC.DeltaChipPct,
- * но ужатая под узкую колонку: text-[10px], min-w-[34px], px-1.
+ * Pct-чип для оси. Типографика совпадает с common.DeltaChip
+ * (brands/collections): text-[11px], font-medium, min-w-[42px],
+ * px-1.5 py-0.5. Отличается только `%`-суффиксом — здесь YoY
+ * проценты, там абсолютные штуки. Раньше был ужат до 10px/min-34
+ * «чтоб влезть в узкую колонку» — ломало общий typographic rhythm
+ * дашборда. Колонка вмещает 42px, если данные 2-значные.
  */
 function DeltaChipPct({ pct }: { pct: number }) {
   const up = pct > 0
@@ -61,7 +65,7 @@ function DeltaChipPct({ pct }: { pct: number }) {
     : 'bg-error/15 text-error'
   return (
     <span
-      className={`num inline-flex min-w-[34px] justify-center rounded-sm px-1 py-0.5 text-[10px] font-medium tabular-nums ${bg}`}
+      className={`num inline-flex min-w-[42px] justify-center rounded-sm px-1.5 py-0.5 text-[11px] font-medium tabular-nums ${bg}`}
     >
       {sign}
       {pct}%
@@ -126,7 +130,7 @@ export default function PriceTileD() {
           }}
         >
           <div className="relative rounded-sm bg-ink-deep px-2.5 py-1">
-            <span className="num text-[13px] font-medium tabular-nums text-paper">
+            <span className="num text-[14px] font-medium tabular-nums text-paper">
               {shownCount}
             </span>
             <span
