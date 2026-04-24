@@ -143,7 +143,7 @@ function V2Hero() {
         </div>
 
         {/* H1 + totals in one row */}
-        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[480px_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[440px_minmax(0,1fr)]">
           <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
             Novelties
           </h1>
@@ -156,7 +156,7 @@ function V2Hero() {
         </div>
 
         {/* main grid — sticky left + scrolling right */}
-        <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[480px_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[440px_minmax(0,1fr)]">
           <aside className="lg:sticky lg:top-20 lg:self-start" style={{ maxHeight: 'calc(100vh - 96px)' }}>
             <CollectionStage />
           </aside>
@@ -197,7 +197,7 @@ function CurrentHero() {
         </div>
 
         {/* H1 + totals in one row */}
-        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[480px_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[440px_minmax(0,1fr)]">
           <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
             Novelties
           </h1>
@@ -210,7 +210,7 @@ function CurrentHero() {
         </div>
 
         {/* main grid — sticky left + scrolling right */}
-        <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[480px_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[440px_minmax(0,1fr)]">
           <aside className="lg:sticky lg:top-20 lg:self-start" style={{ maxHeight: 'calc(100vh - 96px)' }}>
             <CollectionStage />
           </aside>
