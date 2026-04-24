@@ -44,22 +44,41 @@ Watch360 — premium аналитическая платформа по часо
 ```
 .
 ├── CLAUDE.md                   # этот файл
+├── MINIO_WORKFLOW.md           # как забирать лого/фото из корп. MinIO (Quick Start +
+│                               # список антипаттернов — читать перед тем, как что-то
+│                               # делать с MinIO)
+├── .env.local                  # MINIO_USER/MINIO_PASS (не в git)
+├── cookies.txt                 # свежий session-token (генерится refresh_cookies.cjs, не в git)
+├── scripts/
+│   ├── refresh_cookies.cjs     # POST /api/v1/login → свежий cookies.txt. zero-deps Node.
+│   └── download_logos.cjs      # читает cookies.txt → качает SVG/PNG → пишет manifest
 ├── HTML/                       # скопированная оригинальная страница + её ассеты
 ├── docs/
 │   ├── plans/
 │   │   └── 2026-04-20-wwg-novelties-redesign-design.md   # design-doc V1
+│   ├── principles/             # рабочие правила проекта
+│   │   └── design-first-plus-decision-log.md
 │   └── ideas/
 │       ├── README.md           # индекс идей
-│       └── NN/                 # каждая идея — своя папка
-│           ├── NN.md
-│           └── ref-*.png       # референсные скриншоты
+│       ├── NN/                 # каждая концепция-идея — своя папка
+│       │   ├── NN.md
+│       │   └── ref-*.png       # референсные скриншоты
+│       └── tiles/              # decision log'и на уровне тайл-вариантов
+│           ├── README.md
+│           └── <tile-id>.md    # пишется ПОСЛЕ выбора победителя
 └── prototype/                  # Vite-проект
+    ├── public/
+    │   └── assets/
+    │       └── logos/           # SVG логотипов брендов (живые из MinIO)
     ├── src/
     │   ├── App.tsx
     │   ├── data.ts             # все числа и категории
     │   ├── index.css           # Tailwind + fonts
+    │   ├── assets/
+    │   │   └── logos-manifest.json  # «Brand name → файл» для BrandLogo
     │   └── components/
-    │       ├── common.tsx      # Eyebrow, DeltaChip, WatchPlaceholder, BrandMonogram
+    │       ├── common.tsx      # Eyebrow, DeltaChip, WatchPlaceholder,
+    │       │                   # BrandMonogram (fallback), BrandLogo (из manifest)
     │       ├── Nav.tsx
     │       ├── HeroStrip.tsx
     │       ├── HeadlineInsights.tsx
@@ -93,6 +112,17 @@ Fonts: Lato (400, 500, 700). H4 24/1.3. Tag 10/12/14. Cormorant Garamond — edi
 
 Tailwind-классы: `text-gold`, `bg-ink-deep`, `text-paper`, `bg-success/15` и т.д.
 
+## Working principles
+
+- **Design-First + Decision Log** для визуальных гипотез (тайл-варианты, микро-эксперименты).
+  Гипотеза в чате → 2-3 варианта в коде → ревью в sandbox → выбор победителя →
+  retrospective decision log в `docs/ideas/tiles/<tile-id>.md`. Документ пишется
+  **после** выбора, не до. Подробнее — `docs/principles/design-first-plus-decision-log.md`.
+- **Проигравшие варианты не удаляем.** В `tileRegistry.tsx` помечаем `archived: true`
+  с однострочным rationale. Остаются видны в sandbox, но не рендерятся на главной.
+- **Document-First остаётся** для уровня плана версии (`docs/plans/`) и концепции-идеи
+  (`docs/ideas/NN/`). Decision logs живут уровнем ниже.
+
 ## Key decisions so far
 
 1. **Три версии = три редакционных угла, не три визуальных темы.** Эстетика из Figma во
@@ -103,7 +133,12 @@ Tailwind-классы: `text-gold`, `bg-ink-deep`, `text-paper`, `bg-success/15`
 3. **Данные — плейсхолдеры** с правдоподобной формой распределения. Извлечены из
    скриншотов оригинальной страницы. См. `prototype/src/data.ts`.
 4. **Фото часов — плейсхолдеры** (круглая рамка с монограммой). Реальные рендеры
-   придут позже.
+   придут позже. Реальные лого брендов уже скачаны (`prototype/public/assets/logos/` +
+   `prototype/src/assets/logos-manifest.json`). Когда понадобится дотянуть ещё ассеты —
+   читать `MINIO_WORKFLOW.md` в корне и запустить
+   `node scripts/refresh_cookies.cjs && node scripts/download_logos.cjs`. Полностью
+   автономно, без DevTools и без ручных экспортов — при условии что `.env.local` с
+   `MINIO_USER`/`MINIO_PASS` лежит в корне (в `.gitignore`).
 5. **Нет drill-down, нет фильтров в V1.** Отчёт, не дашборд. Hover-highlight ok.
 6. **Новые типы визуализаций разрешены.** Не ограничиваемся существующими
    паттернами Watch360.

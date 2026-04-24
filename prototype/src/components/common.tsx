@@ -1,4 +1,10 @@
 import type { ReactNode } from 'react'
+import logoManifest from '../assets/logos-manifest.json'
+
+// Сгенерирован scripts/download_logos.cjs. Формат:
+//   { "Rolex": { "file": "rolex.svg", "matchedSlug": "rolex" }, "Chanel": null, ... }
+// null → лого не нашлось в MinIO → BrandLogo падает на BrandMonogram (инициалы).
+const LOGOS = logoManifest as Record<string, { file: string } | null>
 
 export function Eyebrow({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
@@ -50,6 +56,11 @@ export function DeltaChip({ delta }: { delta?: number }) {
   )
 }
 
+/**
+ * Инициалы на тёмном круге с золотой обводкой.
+ * Используется в оригинальной Watch360-плитке (Variant A) и как fallback
+ * для BrandLogo, когда для бренда нет файла в MinIO.
+ */
 export function BrandMonogram({ name, size = 40 }: { name: string; size?: number }) {
   const initials = name
     .replace(/[&.]/g, ' ')
@@ -64,6 +75,37 @@ export function BrandMonogram({ name, size = 40 }: { name: string; size?: number
       style={{ width: size, height: size, fontSize: size * 0.38 }}
     >
       {initials}
+    </div>
+  )
+}
+
+/**
+ * Реальный логотип бренда, вписанный в квадратную площадку size×size
+ * по object-contain. Без рамки и подложки — лого живёт как будто поверх
+ * фона карточки. Если лого для бренда в manifest'е нет (null),
+ * падаем на BrandMonogram — чтобы не было пустого места в ряду.
+ *
+ * Почему contain, а не cover: лого бывают разного формата — крона
+ * Rolex'а приближена к квадрату, двойное C Шанель — тоже, но
+ * «JLC» или «Eberhard & Co.» это скорее wordmark. Contain гарантирует,
+ * что ни один лого не будет обрезан — он просто зажмётся в меньшую
+ * сторону (высоту или ширину), как в бар-чартах Watch360 с Google-лого.
+ */
+export function BrandLogo({ name, size = 28 }: { name: string; size?: number }) {
+  const logo = LOGOS[name]
+  if (!logo) return <BrandMonogram name={name} size={size} />
+
+  return (
+    <div
+      className="flex shrink-0 items-center justify-center"
+      style={{ width: size, height: size }}
+    >
+      <img
+        src={`/assets/logos/${logo.file}`}
+        alt={name}
+        className="max-h-full max-w-full object-contain"
+        loading="lazy"
+      />
     </div>
   )
 }

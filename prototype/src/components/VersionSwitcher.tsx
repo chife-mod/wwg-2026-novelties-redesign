@@ -1,8 +1,9 @@
-export type Version = 'v1' | 'v2'
+export type Version = 'v1' | 'v2' | 'current'
 
 const versions: { id: Version; label: string; kicker: string }[] = [
-  { id: 'v2', label: 'The Window',       kicker: 'V2' },
-  { id: 'v1', label: 'Editorial Report', kicker: 'V1' },
+  { id: 'current', label: 'Current',           kicker: '★' },
+  { id: 'v1',      label: 'Editorial Report',  kicker: 'V1' },
+  { id: 'v2',      label: 'The Window',        kicker: 'V2' },
 ]
 
 export default function VersionSwitcher({
@@ -38,7 +39,7 @@ export default function VersionSwitcher({
             )
           })}
           <span className="ml-3 hidden rounded-sm border border-white/15 px-2 py-0.5 text-[10px] uppercase tracking-eyebrow text-mute-2 md:inline">
-            press 1 / 2
+            press 1 / 2 / 3
           </span>
         </div>
       </div>

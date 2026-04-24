@@ -109,7 +109,7 @@ function RowBar({
 
 // ——————————————————————————————————————— tiles
 
-function BrandsTile() {
+export function BrandsTile() {
   const list = brands.slice(0, 6)
   const max = list[0].count
   return (
@@ -123,7 +123,7 @@ function BrandsTile() {
   )
 }
 
-function CollectionsTile() {
+export function CollectionsTile() {
   const list = collections.slice(0, 6)
   const max = list[0].count
   return (
@@ -137,7 +137,7 @@ function CollectionsTile() {
   )
 }
 
-function PriceTile() {
+export function PriceTile() {
   const max = Math.max(...prices.map((p) => p.count))
   const leadIdx = prices.findIndex((p) => p.count === max)
   const lead = prices[leadIdx]
@@ -208,7 +208,7 @@ function PriceTile() {
   )
 }
 
-function DialTile() {
+export function DialTile() {
   const total = dialColors.reduce((a, b) => a + b.count, 0)
   const lead = dialColors[0]
   const leadShare = Math.round((lead.count / total) * 100)
@@ -255,7 +255,7 @@ const strapSwatch: Record<string, string> = {
   'Composite': '#3F3F3F',
 }
 
-function StrapTile() {
+export function StrapTile() {
   const list = strapTypes.slice(0, 6)
   const max = list[0].count
   const totalAll = strapTypes.reduce((a, b) => a + b.count, 0)
@@ -280,7 +280,7 @@ function StrapTile() {
   )
 }
 
-function DiameterTile() {
+export function DiameterTile() {
   const total = diameters.reduce((a, b) => a + b.count, 0)
   const max = Math.max(...diameters.map((d) => d.count))
   const peak = diameters.find((d) => d.count === max)!
@@ -337,7 +337,7 @@ function DiameterTile() {
   )
 }
 
-function FunctionsTile() {
+export function FunctionsTile() {
   const list = fns.slice(0, 6)
   const max = list[0].count
   return (
@@ -367,7 +367,7 @@ const materialSwatch: Record<string, string> = {
   'Gold': '#C69956',
 }
 
-function MaterialsTile() {
+export function MaterialsTile() {
   const list = caseMaterials.slice(0, 6)
   const max = list[0].count
   const goldTotal = caseMaterials.filter(m => /gold/i.test(m.name)).reduce((a, b) => a + b.count, 0)
@@ -393,7 +393,7 @@ function MaterialsTile() {
   )
 }
 
-function HeightsTile() {
+export function HeightsTile() {
   const list = [...caseHeights].sort((a, b) => b.count - a.count).slice(0, 6)
   const max = list[0].count
   const thin = caseHeights.filter(h => parseInt(h.name) <= 8).reduce((a, b) => a + b.count, 0)
@@ -409,7 +409,7 @@ function HeightsTile() {
   )
 }
 
-function MovementTile() {
+export function MovementTile() {
   const total = movements.reduce((a, b) => a + b.count, 0)
   const auto = movements.find(m => m.name === 'Automatic')!
   const manual = movements.find(m => m.name === 'Manual')!
@@ -446,7 +446,7 @@ function MovementTile() {
   )
 }
 
-function EditionsTile() {
+export function EditionsTile() {
   const total = editions.reduce((a, b) => a + b.count, 0)
   const share = Math.round((total / TOTAL_NOVELTIES) * 100)
   return (

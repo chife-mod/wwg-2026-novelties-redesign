@@ -1,0 +1,50 @@
+{
+  "Rolex": {
+    "file": "rolex.svg",
+    "matchedSlug": "rolex"
+  },
+  "Tudor": {
+    "file": "tudor.svg",
+    "matchedSlug": "tudor"
+  },
+  "Patek Philippe": {
+    "file": "patek_philippe.svg",
+    "matchedSlug": "patek_philippe"
+  },
+  "IWC": {
+    "file": "iwc.svg",
+    "matchedSlug": "iwc"
+  },
+  "Piaget": {
+    "file": "piaget.svg",
+    "matchedSlug": "piaget"
+  },
+  "Bvlgari": {
+    "file": "bvlgari.svg",
+    "matchedSlug": "bvlgari"
+  },
+  "Chopard": {
+    "file": "chopard.svg",
+    "matchedSlug": "chopard"
+  },
+  "Eberhard & Co.": {
+    "file": "eberhard_co.svg",
+    "matchedSlug": "eberhard_co"
+  },
+  "Hublot": {
+    "file": "hublot.svg",
+    "matchedSlug": "hublot"
+  },
+  "Jaeger-LeCoultre": {
+    "file": "jaeger_lecoultre.svg",
+    "matchedSlug": "jaeger_lecoultre"
+  },
+  "Chanel": {
+    "file": "chanel.svg",
+    "matchedSlug": "chanel"
+  },
+  "Cartier": {
+    "file": "cartier.svg",
+    "matchedSlug": "cartier"
+  }
+}

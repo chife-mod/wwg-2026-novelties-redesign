@@ -15,5 +15,8 @@ build/
 .env
 .env.local
 
+# MinIO auth (см. MINIO_WORKFLOW.md)
+cookies.txt
+
 # scraped original page — not ours to re-host
 HTML/

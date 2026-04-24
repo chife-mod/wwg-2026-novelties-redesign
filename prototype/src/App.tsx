@@ -12,6 +12,7 @@ import VersionSwitcher, { type Version } from './components/VersionSwitcher'
 import { FairBackdrop } from './components/FairWindow'
 import CollectionStage from './components/WatchStage'
 import V2RightGrid from './components/V2RightGrid'
+import CurrentRightGrid from './components/current/CurrentRightGrid'
 import { brands, collections, TOTAL_BRANDS, TOTAL_COLLECTIONS, TOTAL_NOVELTIES } from './data'
 
 function V1() {
@@ -93,14 +94,77 @@ function V2() {
   return <V2Hero />
 }
 
+function CurrentHero() {
+  return (
+    <section className="relative text-paper" style={{ background: '#1F140C' }}>
+      {/* ambient backdrop pinned to first viewport */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[100vh] overflow-hidden">
+        <FairBackdrop />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-[1440px] px-8">
+        {/* top meta strip */}
+        <div className="flex flex-wrap items-center gap-2 pt-6">
+          <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-eyebrow">Watches &amp; Wonders Live</span>
+          </div>
+          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
+          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
+          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Day 2 of 5</div>
+        </div>
+
+        {/* H1 + totals in one row */}
+        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[480px_minmax(0,1fr)]">
+          <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
+            Novelties
+          </h1>
+          <div className="grid grid-cols-3 gap-8">
+            <div className="border-l border-white/25 pl-4">
+              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_NOVELTIES}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">novelties on show</div>
+            </div>
+            <div className="border-l border-white/25 pl-4">
+              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_BRANDS}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">maisons</div>
+            </div>
+            <div className="border-l border-white/25 pl-4">
+              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_COLLECTIONS}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">collections</div>
+            </div>
+          </div>
+        </div>
+
+        {/* main grid — sticky left + scrolling right */}
+        <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[480px_minmax(0,1fr)]">
+          <aside className="lg:sticky lg:top-20 lg:self-start" style={{ maxHeight: 'calc(100vh - 96px)' }}>
+            <CollectionStage />
+          </aside>
+          <div className="min-w-0">
+            <CurrentRightGrid />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Current() {
+  return <CurrentHero />
+}
+
 export default function App() {
-  const [version, setVersion] = useState<Version>('v2')
+  const [version, setVersion] = useState<Version>('current')
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target && (e.target as HTMLElement).closest('input, textarea')) return
-      if (e.key === '1') setVersion('v1')
-      if (e.key === '2') setVersion('v2')
+      if (e.key === '1') setVersion('current')
+      if (e.key === '2') setVersion('v1')
+      if (e.key === '3') setVersion('v2')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -110,7 +174,9 @@ export default function App() {
     <div className="min-h-screen bg-paper text-ink">
       <VersionSwitcher active={version} onChange={setVersion} />
       <Nav />
-      {version === 'v1' ? <V1 /> : <V2 />}
+      {version === 'v1' && <V1 />}
+      {version === 'v2' && <V2 />}
+      {version === 'current' && <Current />}
       <FooterStrip />
     </div>
   )
