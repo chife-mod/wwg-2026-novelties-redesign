@@ -1,5 +1,5 @@
 import { brands } from '../../../data'
-import { BrandLogo, DeltaChip } from '../../common'
+import { BrandLogo, DeltaChip, useFormatCount } from '../../common'
 
 /**
  * Variant D — короче, мягче, «эдиториал».
@@ -19,6 +19,7 @@ import { BrandLogo, DeltaChip } from '../../common'
 export default function BrandsTileD() {
   const list = brands.slice(0, 6)
   const max = list[0].count
+  const fmt = useFormatCount()
 
   return (
     <article className="rounded-sm border border-ink/5 bg-white p-6 shadow-[0_20px_40px_rgba(0,0,0,0.22)]">
@@ -56,7 +57,7 @@ export default function BrandsTileD() {
                 />
               </div>
             </div>
-            <span className="num text-[14px] tabular-nums text-ink">{b.count}</span>
+            <span className="num text-[14px] tabular-nums text-ink">{fmt(b.count)}</span>
             <DeltaChip delta={b.delta} />
           </li>
         ))}

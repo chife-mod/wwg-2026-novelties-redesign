@@ -15,6 +15,8 @@ import V2RightGrid from './components/V2RightGrid'
 import CurrentRightGrid from './components/current/CurrentRightGrid'
 import BrandsTileD from './components/current/variants/BrandsTileD'
 import BrandsTileD1 from './components/current/variants/BrandsTileD1'
+import { ViewModeProvider } from './components/ViewModeContext'
+import ViewModeToggle from './components/ViewModeToggle'
 import {
   brands,
   collections,
@@ -128,18 +130,25 @@ function V2Hero() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-8">
-        {/* top meta strip */}
-        <div className="flex flex-wrap items-center gap-2 pt-6">
-          <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
-            </span>
-            <span className="text-[10px] font-semibold uppercase tracking-eyebrow">Watches &amp; Wonders Live</span>
+        {/* top meta strip — теги слева, ViewModeToggle справа.
+            Grid [440px_1fr] повторяет структуру main grid ниже — так
+            toggle выравнивается ровно по левому краю правой колонки
+            (контент с плитками), а теги — по левой (hero). */}
+        <div className="grid grid-cols-1 items-center gap-10 pt-6 lg:grid-cols-[440px_minmax(0,1fr)]">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-eyebrow">Watches &amp; Wonders Live</span>
+            </div>
+            <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
+            <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
           </div>
-          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
-          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
-          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Day 2 of 5</div>
+          <div className="flex justify-start lg:justify-start">
+            <ViewModeToggle />
+          </div>
         </div>
 
         {/* H1 + totals in one row */}
@@ -182,18 +191,25 @@ function CurrentHero() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-8">
-        {/* top meta strip */}
-        <div className="flex flex-wrap items-center gap-2 pt-6">
-          <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
-            </span>
-            <span className="text-[10px] font-semibold uppercase tracking-eyebrow">Watches &amp; Wonders Live</span>
+        {/* top meta strip — теги слева, ViewModeToggle справа.
+            Grid [440px_1fr] повторяет структуру main grid ниже — так
+            toggle выравнивается ровно по левому краю правой колонки
+            (контент с плитками), а теги — по левой (hero). */}
+        <div className="grid grid-cols-1 items-center gap-10 pt-6 lg:grid-cols-[440px_minmax(0,1fr)]">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-error opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-error" />
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-eyebrow">Watches &amp; Wonders Live</span>
+            </div>
+            <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
+            <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
           </div>
-          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Geneva</div>
-          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">April 2026</div>
-          <div className="rounded-full bg-black/40 px-3 py-1.5 text-[10px] uppercase tracking-eyebrow backdrop-blur-sm">Day 2 of 5</div>
+          <div className="flex justify-start lg:justify-start">
+            <ViewModeToggle />
+          </div>
         </div>
 
         {/* H1 + totals in one row */}
@@ -276,13 +292,15 @@ export default function App() {
   const rootBg = version === 'v1' ? '#EEEDEC' : '#1F140C'
 
   return (
-    <div className="min-h-screen text-ink" style={{ background: rootBg }}>
-      <VersionSwitcher active={version} onChange={setVersion} />
-      <Nav />
-      {version === 'v1' && <V1 />}
-      {version === 'v2' && <V2 />}
-      {version === 'current' && <Current />}
-      <FooterStrip />
-    </div>
+    <ViewModeProvider>
+      <div className="min-h-screen text-ink" style={{ background: rootBg }}>
+        <VersionSwitcher active={version} onChange={setVersion} />
+        <Nav />
+        {version === 'v1' && <V1 />}
+        {version === 'v2' && <V2 />}
+        {version === 'current' && <Current />}
+        <FooterStrip />
+      </div>
+    </ViewModeProvider>
   )
 }

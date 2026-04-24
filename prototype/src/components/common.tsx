@@ -1,5 +1,28 @@
 import type { ReactNode } from 'react'
 import logoManifest from '../assets/logos-manifest.json'
+import { useViewMode } from './ViewModeContext'
+import { TOTAL_NOVELTIES } from '../data'
+
+/**
+ * formatCount — универсальный helper для distribution-чисел.
+ * Возвращает либо абсолютное число ('58'), либо долю от total ('12%').
+ * Использует глобальный ViewMode через useViewMode().
+ * total по умолчанию — TOTAL_NOVELTIES (478); можно override'ить
+ * для тайлов со своим знаменателем (напр., price bucket vs total brand count).
+ */
+export function useFormatCount() {
+  const { mode } = useViewMode()
+  return (count: number, total: number = TOTAL_NOVELTIES) => {
+    if (mode === 'pct') {
+      const pct = (count / total) * 100
+      // Округляем до целого, если >= 10%, иначе до 0.1 — мелкие бакеты
+      // теряют смысл при целом округлении (2/478 = 0.4% → 0% неинформативно).
+      const digits = pct >= 10 ? 0 : 1
+      return `${pct.toFixed(digits)}%`
+    }
+    return String(count)
+  }
+}
 
 // Сгенерирован scripts/download_logos.cjs. Формат:
 //   { "Rolex": { "file": "rolex.svg", "matchedSlug": "rolex" }, "Chanel": null, ... }

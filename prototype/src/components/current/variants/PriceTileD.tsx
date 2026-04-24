@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { prices } from '../../../data'
-import { DeltaChipPct } from '../../common'
+import { DeltaChipPct, useFormatCount } from '../../common'
 
 /**
  * Variant D — production YoY price-range histogram.
@@ -52,6 +52,11 @@ export default function PriceTileD() {
   const counts25 = COUNTS_2025
   const max = Math.max(...counts25, ...counts26)
   const peakIdx = counts26.indexOf(Math.max(...counts26))
+  const fmt = useFormatCount()
+  // Знаменатель для price — общая сумма по бакетам (все часы, разложенные
+  // по цене). Не TOTAL_NOVELTIES 478, а сумма prices.count — логично для
+  // «доли бакета в распределении».
+  const priceTotal = counts26.reduce((a, b) => a + b, 0)
 
   // «Бегущий» tooltip: null → показывается на peak, число → на этом баре
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
@@ -105,7 +110,7 @@ export default function PriceTileD() {
         >
           <div className="relative rounded-sm bg-ink-deep px-2.5 py-1">
             <span className="num text-[14px] font-medium tabular-nums text-paper">
-              {shownCount}
+              {fmt(shownCount, priceTotal)}
             </span>
             <span
               aria-hidden

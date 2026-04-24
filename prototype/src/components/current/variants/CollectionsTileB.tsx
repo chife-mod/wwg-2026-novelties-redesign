@@ -1,5 +1,5 @@
 import { topCollections } from '../../../data'
-import { BrandLogo, DeltaChip } from '../../common'
+import { BrandLogo, DeltaChip, useFormatCount } from '../../common'
 
 /**
  * Variant B — такая же «редакторская» плитка, как BrandsTileD:
@@ -26,6 +26,7 @@ const BRAND_ALIAS: Record<string, string> = {
 export default function CollectionsTileB() {
   const list = topCollections.slice(0, 6)
   const max = list[0].count
+  const fmt = useFormatCount()
 
   return (
     <article className="rounded-sm border border-ink/5 bg-white p-6 shadow-[0_20px_40px_rgba(0,0,0,0.22)]">
@@ -54,7 +55,7 @@ export default function CollectionsTileB() {
                   />
                 </div>
               </div>
-              <span className="num text-[14px] tabular-nums text-ink">{c.count}</span>
+              <span className="num text-[14px] tabular-nums text-ink">{fmt(c.count)}</span>
               <DeltaChip delta={c.delta} />
             </li>
           )
