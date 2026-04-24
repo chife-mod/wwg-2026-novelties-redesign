@@ -6,6 +6,18 @@
 export const TOTAL_NOVELTIES = 478
 export const TOTAL_BRANDS = 61
 export const TOTAL_COLLECTIONS = 119
+export const TOTAL_SOURCES = 61
+export const TOTAL_COUNTRIES = 26
+
+// YoY-дельты для hero-метрик. % к WWG 2025. Countries +189% —
+// заведомо экстремальная стресс-цифра (чтобы проверить, как
+// HeroDeltaPct отрисует трёхзначный процент).
+export const HERO_DELTAS = {
+  brands: 5,
+  novelties: -7,
+  sources: 11,
+  countries: 189,
+} as const
 
 export type Ranked = { name: string; count: number; delta?: number }
 
@@ -162,9 +174,9 @@ export const movements: Ranked[] = [
 ]
 
 export const editions: Ranked[] = [
-  { name: 'Limited Edition', count: 89 },
-  { name: 'Anniversary Edition', count: 24 },
-  { name: 'Partnership Edition', count: 11 },
+  { name: 'Limited Edition',     count: 89, delta: +14 },
+  { name: 'Anniversary Edition', count: 24, delta: -3  },
+  { name: 'Partnership Edition', count: 11, delta: +6  },
 ]
 
 // Top collections — structured for the V2 slider (brand/name split)

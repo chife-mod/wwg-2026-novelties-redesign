@@ -15,7 +15,92 @@ import V2RightGrid from './components/V2RightGrid'
 import CurrentRightGrid from './components/current/CurrentRightGrid'
 import BrandsTileD from './components/current/variants/BrandsTileD'
 import BrandsTileD1 from './components/current/variants/BrandsTileD1'
-import { brands, collections, TOTAL_BRANDS, TOTAL_COLLECTIONS, TOTAL_NOVELTIES } from './data'
+import {
+  brands,
+  collections,
+  TOTAL_BRANDS,
+  TOTAL_COLLECTIONS,
+  TOTAL_NOVELTIES,
+  TOTAL_SOURCES,
+  TOTAL_COUNTRIES,
+  HERO_DELTAS,
+} from './data'
+
+/**
+ * HeroDeltaPct — премиальная YoY-дельта для hero-метрик.
+ *
+ * Осознанно НЕ boxy-chip (как в DeltaChipPct в common.tsx и как в
+ * референсе клиента — там плашка с background). Вместо этого:
+ *   — тонкий триангл-глиф (7×7) + число в цвете,
+ *   — цвета ярче стандартных success/error (те задизайнены под
+ *     белые плитки; на dark chocolate #1F140C они тухнут).
+ *     Teal #3FD3CD и salmon #FF7680 — на 2 стопа светлее токенов,
+ *     читаются поверх backdrop'а без фоновой подложки,
+ *   — tabular-nums + leading-none + tight gap — один глазной
+ *     блок вместо «число + чип».
+ *
+ * Итог: дельта живёт как акцентный «ассистент» у большого числа,
+ * не отвлекая и не ломая editorial-ритм.
+ */
+function HeroDeltaPct({ pct }: { pct: number }) {
+  const up = pct > 0
+  const flat = pct === 0
+  const color = up
+    ? 'text-[#3FD3CD]'
+    : flat
+    ? 'text-mute-2'
+    : 'text-[#FF7680]'
+  const sign = up ? '+' : ''
+  return (
+    <span
+      className={`num inline-flex items-center gap-[3px] text-[12px] font-medium leading-none tabular-nums ${color}`}
+    >
+      {!flat && (
+        <svg width="7" height="7" viewBox="0 0 7 7" aria-hidden>
+          {up ? (
+            <path d="M3.5 0.5 L6.5 5.5 L0.5 5.5 Z" fill="currentColor" />
+          ) : (
+            <path d="M3.5 6.5 L6.5 1.5 L0.5 1.5 Z" fill="currentColor" />
+          )}
+        </svg>
+      )}
+      <span>
+        {sign}
+        {pct}%
+      </span>
+    </span>
+  )
+}
+
+/**
+ * HeroStat — одна колонка верхней meta-сетки hero (4 штуки в ряд).
+ * Большое число + inline дельта справа сверху (items-start, чтобы
+ * дельта прибивалась к cap-height цифры) + подпись внизу.
+ * Левая hairline граница border-l — визуальный разделитель колонок.
+ */
+function HeroStat({
+  value,
+  label,
+  delta,
+}: {
+  value: number
+  label: string
+  delta?: number
+}) {
+  return (
+    <div className="border-l border-white/25 pl-4">
+      <div className="flex items-start gap-[6px]">
+        <div className="num text-[44px] font-light leading-none text-paper">{value}</div>
+        {delta !== undefined && (
+          <div className="-mt-[2px]">
+            <HeroDeltaPct pct={delta} />
+          </div>
+        )}
+      </div>
+      <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">{label}</div>
+    </div>
+  )
+}
 
 function V1() {
   return (
@@ -62,19 +147,11 @@ function V2Hero() {
           <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
             Novelties
           </h1>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="border-l border-white/25 pl-4">
-              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_NOVELTIES}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">novelties on show</div>
-            </div>
-            <div className="border-l border-white/25 pl-4">
-              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_BRANDS}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">maisons</div>
-            </div>
-            <div className="border-l border-white/25 pl-4">
-              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_COLLECTIONS}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">collections</div>
-            </div>
+          <div className="grid grid-cols-4 gap-6">
+            <HeroStat value={TOTAL_BRANDS} label="Brands" delta={HERO_DELTAS.brands} />
+            <HeroStat value={TOTAL_NOVELTIES} label="Novelties presented" delta={HERO_DELTAS.novelties} />
+            <HeroStat value={TOTAL_SOURCES} label="Sources" delta={HERO_DELTAS.sources} />
+            <HeroStat value={TOTAL_COUNTRIES} label="Countries" delta={HERO_DELTAS.countries} />
           </div>
         </div>
 
@@ -124,19 +201,11 @@ function CurrentHero() {
           <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
             Novelties
           </h1>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="border-l border-white/25 pl-4">
-              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_NOVELTIES}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">novelties on show</div>
-            </div>
-            <div className="border-l border-white/25 pl-4">
-              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_BRANDS}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">maisons</div>
-            </div>
-            <div className="border-l border-white/25 pl-4">
-              <div className="num text-[44px] font-light leading-none text-paper">{TOTAL_COLLECTIONS}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-eyebrow text-mute-2">collections</div>
-            </div>
+          <div className="grid grid-cols-4 gap-6">
+            <HeroStat value={TOTAL_BRANDS} label="Brands" delta={HERO_DELTAS.brands} />
+            <HeroStat value={TOTAL_NOVELTIES} label="Novelties presented" delta={HERO_DELTAS.novelties} />
+            <HeroStat value={TOTAL_SOURCES} label="Sources" delta={HERO_DELTAS.sources} />
+            <HeroStat value={TOTAL_COUNTRIES} label="Countries" delta={HERO_DELTAS.countries} />
           </div>
         </div>
 
@@ -201,8 +270,13 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  // Root bg — dark chocolate на версиях, где герой тёмный (current/v2).
+  // Иначе на скролле между hero и FooterStrip'ом виден paper-seam 48px
+  // (mt-12 у footer'а). На V1 (editorial page на paper) — остаётся paper.
+  const rootBg = version === 'v1' ? '#EEEDEC' : '#1F140C'
+
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen text-ink" style={{ background: rootBg }}>
       <VersionSwitcher active={version} onChange={setVersion} />
       <Nav />
       {version === 'v1' && <V1 />}

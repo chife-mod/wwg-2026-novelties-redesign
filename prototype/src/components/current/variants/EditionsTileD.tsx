@@ -1,21 +1,24 @@
+import { useEffect, useRef, useState } from 'react'
 import { editions } from '../../../data'
+import { DeltaChip } from '../../common'
 
 /**
- * Variant D — C со счётчиками внутри плит (top-left).
+ * Variant D — полосатые плиты + inline-легенда «chip + name + count + delta».
  *
- * Гипотеза: C читался как «три цветных плиты с неподписанной пропорцией»
- * — быстрый glance требовал похода в легенду. Если ключевая цифра живёт
- * прямо на плите, плитка самодостаточна: видишь 89 на широкой золотой,
- * 24 на узкой ink-deep, 11 на крошечной mute — число + масса плиты
- * рассказывают историю без скроллинга в легенду.
+ * Что стало:
+ *   — Легенда снова несёт числа и дельты (клиент просил delta везде).
+ *     Одна горизонтальная строка: [chip] Limited 89 +14, [chip] Anniversary
+ *     24 −3, [chip] Partnership 11 +6. Выровнена по левому краю, с
+ *     зазором gap-x-10 между парами.
+ *   — На плите число живёт дублирующе — как акцентная цифра «массы».
+ *     Когда плита сужается (узкий вьюпорт или узкая пропорция), цифра
+ *     адаптивно прячется: ResizeObserver ловит ширину плиты < 72px и
+ *     снимает её. Легенда внизу всё равно покрывает данные, так что
+ *     потеря числа на плите не страшна.
+ *   — minWidth с плит снят — пусть Partnership на узком вьюпорте
+ *     сжимается до настоящей пропорции, а не держит форсированный floor.
  *
- * Отличия от C:
- *   — Большое число (48px, font-light) выровнено top-left в padding'e
- *     плиты. Цвет контрастен заливке (white на gold/ink, ink на mute).
- *   — В легенде внизу убран count (он теперь на плите). Осталось только
- *     square chip + name — легенда как ключ «какой цвет — какое издание».
- *
- * Штриховка и цвета — без изменений от C (3px шаг, low contrast).
+ * Штриховка: 3px шаг, low-contrast тона (fabric/guilloché sample).
  */
 
 const COLOR: Record<
@@ -27,6 +30,54 @@ const COLOR: Record<
   'Partnership Edition': { base: '#C6C6C6', stripe: '#D0D0D0', fg: '#1E1D19' },
 }
 
+// Порог, ниже которого число на плите снимается. «11» при 36px font-light
+// занимает ~24px, плюс left-3 (12px) = 36px, плюс 8px воздуха = 44px.
+// «89» / «24» сидят на заведомо широких плитах, общий минимум 44
+// работает для всех.
+const NUM_MIN_WIDTH = 44
+
+type PlateProps = {
+  edition: (typeof editions)[number]
+  color: { base: string; stripe: string; fg: string }
+  pct: number
+}
+
+function EditionPlate({ edition, color, pct }: PlateProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [fits, setFits] = useState(true)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => {
+      setFits(entry.contentRect.width >= NUM_MIN_WIDTH)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className="relative overflow-hidden rounded-sm"
+      style={{
+        width: `${pct}%`,
+        background: `repeating-linear-gradient(45deg, ${color.base} 0 3px, ${color.stripe} 3px 6px)`,
+      }}
+      aria-label={`${edition.name}: ${edition.count}`}
+    >
+      {fits && (
+        <div
+          className="num absolute left-3 top-2 text-[36px] font-light leading-none tabular-nums"
+          style={{ color: color.fg }}
+        >
+          {edition.count}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function EditionsTileD() {
   const total = editions.reduce((a, b) => a + b.count, 0)
 
@@ -36,37 +87,20 @@ export default function EditionsTileD() {
         Special editions
       </h3>
 
-      {/* Плиты. Каждая — flex-контейнер с числом top-left в padding'e. */}
       <div className="mt-6 flex h-[140px] gap-2">
-        {editions.map((e) => {
-          const c = COLOR[e.name] ?? { base: '#999', stripe: '#BBB', fg: '#FFF' }
-          const pct = (e.count / total) * 100
-          return (
-            <div
-              key={e.name}
-              className="relative overflow-hidden rounded-sm"
-              style={{
-                width: `${pct}%`,
-                minWidth: 96, // floor — чтобы «11» на узкой Partnership всегда имело воздух
-                background: `repeating-linear-gradient(45deg, ${c.base} 0 3px, ${c.stripe} 3px 6px)`,
-              }}
-              aria-label={`${e.name}: ${e.count}`}
-            >
-              <div
-                className="num absolute left-3 top-2 text-[40px] font-light leading-none tabular-nums"
-                style={{ color: c.fg }}
-              >
-                {e.count}
-              </div>
-            </div>
-          )
-        })}
+        {editions.map((e) => (
+          <EditionPlate
+            key={e.name}
+            edition={e}
+            color={COLOR[e.name] ?? { base: '#999', stripe: '#BBB', fg: '#FFF' }}
+            pct={(e.count / total) * 100}
+          />
+        ))}
       </div>
 
-      {/* Легенда — inline, одна строка, прижата к левому краю. Держит
-          ту же вертикаль, что и 89 на первой плите (top-left ритм).
-          Три пары «chip + name» с зазором gap-x-12 (~48px). */}
-      <ul className="mt-4 flex items-center gap-x-10">
+      {/* Легенда — inline, одна строка, слева: chip + name + count + delta.
+          gap-x-10 (~40px) между парами, gap-2 внутри пары. */}
+      <ul className="mt-4 flex flex-wrap items-center gap-x-10 gap-y-2">
         {editions.map((e) => (
           <li key={e.name} className="flex items-center gap-2">
             <span
@@ -77,6 +111,8 @@ export default function EditionsTileD() {
             <span className="text-[14px] leading-none text-ink">
               {e.name.replace(' Edition', '')}
             </span>
+            <span className="num text-[14px] tabular-nums text-ink">{e.count}</span>
+            <DeltaChip delta={e.delta ?? 0} />
           </li>
         ))}
       </ul>

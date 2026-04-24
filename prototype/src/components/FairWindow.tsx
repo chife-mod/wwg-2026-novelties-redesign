@@ -32,14 +32,6 @@ export function FairBackdrop() {
             'radial-gradient(closest-side, rgba(169,129,85,0.35), rgba(139,99,55,0.08) 55%, transparent 100%)',
         }}
       />
-      {/* soft floor line */}
-      <div
-        className="absolute bottom-[28%] left-0 right-0 h-px"
-        style={{
-          background:
-            'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 25%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0.08) 75%, transparent 100%)',
-        }}
-      />
       {/* vignette */}
       <div
         className="absolute inset-0"
@@ -54,6 +46,19 @@ export function FairBackdrop() {
         style={{
           backgroundImage:
             'url("data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.5%22/></svg>")',
+        }}
+      />
+      {/* Bottom fade-to-section. Нижний край backdrop'а (gradient уходит
+          в #0F0906, плюс vignette) был заметно темнее, чем plain-фон
+          секции #1F140C ниже 100vh — отсюда горизонтальный стык. Этот
+          слой плавно переводит нижние ~45% backdrop'а в точно тот же
+          #1F140C, поверх всех остальных слоёв. Стык становится
+          градиентным переходом, который глаз не замечает. */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[45%]"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(31,20,12,0) 0%, rgba(31,20,12,0.6) 55%, #1F140C 100%)',
         }}
       />
     </div>

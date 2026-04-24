@@ -124,7 +124,7 @@ export default function CollectionStage() {
         </div>
 
         {/* kicker below photo */}
-        <div className="mt-6 flex items-center justify-between border-t border-white/20 pt-4 text-[11px] uppercase tracking-eyebrow text-mute-2">
+        <div className="mt-6 flex items-center justify-between text-[11px] uppercase tracking-eyebrow text-mute-2">
           <div className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-gold" />
             <span>Top collection</span>
