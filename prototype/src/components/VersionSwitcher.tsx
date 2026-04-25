@@ -1,9 +1,21 @@
-export type Version = 'v1' | 'v2' | 'current'
+// Versioning convention (set 2026-04-25):
+//   v1 = Editorial Report (original cover story)
+//   v2 = The Window (hero-slider + sticky-collection rail)
+//   v3 = "current" — canonical tile-variant sandbox page
+//   v4 = Editorial+ — new editorial-grade right grid (MarketMap, etc.)
+//   v5 = V3 with PriceTile swapped for MarketMap (under Price ranges header)
+//
+// Switcher order is REVERSED (newest leftmost) per Oleg 2026-04-25:
+//   [V5] [V4] [V3] [V2] [V1]
+// Labels are bare V-numbers — no descriptive subtitles, no keyboard hint chip.
+export type Version = 'v1' | 'v2' | 'v3' | 'v4' | 'v5'
 
-const versions: { id: Version; label: string; kicker: string }[] = [
-  { id: 'current', label: 'Current',           kicker: '★' },
-  { id: 'v1',      label: 'Editorial Report',  kicker: 'V1' },
-  { id: 'v2',      label: 'The Window',        kicker: 'V2' },
+const versions: { id: Version; kicker: string }[] = [
+  { id: 'v5', kicker: 'V5' },
+  { id: 'v4', kicker: 'V4' },
+  { id: 'v3', kicker: 'V3' },
+  { id: 'v2', kicker: 'V2' },
+  { id: 'v1', kicker: 'V1' },
 ]
 
 export default function VersionSwitcher({
@@ -28,19 +40,15 @@ export default function VersionSwitcher({
                 key={v.id}
                 type="button"
                 onClick={() => onChange(v.id)}
-                className={`group relative flex items-baseline gap-2 rounded-sm px-3 py-1.5 text-[11px] uppercase tracking-eyebrow transition-colors ${
-                  on ? 'text-paper' : 'text-mute-2 hover:text-paper'
+                className={`group relative rounded-sm px-3 py-1.5 text-[11px] font-medium uppercase tracking-eyebrow transition-colors ${
+                  on ? 'text-gold' : 'text-mute-3 hover:text-paper'
                 }`}
               >
-                <span className={`num font-medium ${on ? 'text-gold' : 'text-mute-3'}`}>{v.kicker}</span>
-                <span>{v.label}</span>
+                <span className="num">{v.kicker}</span>
                 {on && <span className="absolute -bottom-0.5 left-3 right-3 h-px bg-gold" />}
               </button>
             )
           })}
-          <span className="ml-3 hidden rounded-sm border border-white/15 px-2 py-0.5 text-[10px] uppercase tracking-eyebrow text-mute-2 md:inline">
-            press 1 / 2 / 3
-          </span>
         </div>
       </div>
     </div>

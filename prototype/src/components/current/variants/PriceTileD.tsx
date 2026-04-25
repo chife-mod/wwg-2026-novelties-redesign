@@ -185,11 +185,13 @@ export default function PriceTileD() {
         ))}
       </div>
 
-      {/* YoY delta chips — цветные pills под label'ами, как в brands/collections */}
+      {/* YoY delta chips — цветные pills под label'ами, как в brands/collections.
+          absDelta = counts26 - counts25, чтобы Count/% toggle мог переключать
+          между числом ("+15") и процентом ("+30%") без потери смысла. */}
       <div className="mt-2 flex gap-2">
         {deltas.map((pct, i) => (
           <div key={i} className="flex flex-1 justify-center">
-            <DeltaChipPct pct={pct} />
+            <DeltaChipPct pct={pct} absDelta={counts26[i] - counts25[i]} />
           </div>
         ))}
       </div>

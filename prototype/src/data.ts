@@ -350,6 +350,171 @@ export const topWatches: TopWatch[] = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// V4 data additions — see docs/plans/2026-04-25-v4-*.md
+// ---------------------------------------------------------------------------
+
+// Top 12 brands (used as row labels and matrix index in MarketMapTile).
+// Order = brand-row order in BRAND_PRICE_MATRIX.
+export const TOP_12_BRANDS: readonly string[] = [
+  'Rolex', 'Tudor', 'Patek Philippe', 'IWC', 'Piaget', 'Bvlgari',
+  'Chopard', 'Eberhard & Co.', 'Hublot', 'Jaeger-LeCoultre',
+  'Cartier', 'Chanel',
+] as const
+
+// Brand × price-bucket cross-tab. 12 brands × 11 buckets.
+// Rows match TOP_12_BRANDS. Cols match prices[] order:
+//   <$1K, $1–2.5K, $2.5–5K, $5–10K, $10–25K, $25–50K,
+//   $50–100K, $100–250K, $250–500K, $500K–1M, >$1M
+// Numbers are placeholder, distributions match plausible WWG 2026 reality
+// (per docs/plans/2026-04-25-v4-marketmap-spec.md §8).
+//
+// Sums sanity check:
+//   Row sums: 58, 31, 22, 19, 18, 17, 14, 12, 12, 11, 9, 8 → total 231
+//   Col sums: 0, 5, 19, 50, 66, 46, 26, 13, 5, 1, 0       → total 231
+//   Max cell: 24 (Rolex × $10–25K) — drives band scaling.
+export const BRAND_PRICE_MATRIX: number[][] = [
+  // Rolex                — peak $10–25K, no sub-$5K, nothing >$250K
+  [0,  0,  0,  18, 24, 11,  4,  1,  0,  0,  0],
+  // Tudor                — cheaper, peak $2.5–5K, nothing above $25K
+  [0,  4, 13, 10,  4,  0,  0,  0,  0,  0,  0],
+  // Patek Philippe       — top tier, nothing under $10K
+  [0,  0,  0,  0,  2,  6,  6,  4,  3,  1,  0],
+  // IWC                  — mid-luxury, broad
+  [0,  0,  1,  4,  8,  4,  2,  0,  0,  0,  0],
+  // Piaget               — slim/dressy, gold-heavy → upper-mid
+  [0,  0,  0,  2,  5,  6,  3,  2,  0,  0,  0],
+  // Bvlgari              — jewellery + Octo, broad spread
+  [0,  0,  1,  3,  4,  4,  3,  1,  1,  0,  0],
+  // Chopard              — L.U.C upper, Mille Miglia mid
+  [0,  0,  0,  3,  4,  4,  2,  1,  0,  0,  0],
+  // Eberhard & Co.       — independent affordable
+  [0,  1,  4,  5,  2,  0,  0,  0,  0,  0,  0],
+  // Hublot               — Big Bang mid → upper-mid
+  [0,  0,  0,  1,  4,  4,  2,  1,  0,  0,  0],
+  // Jaeger-LeCoultre     — Reverso classic + ultra-comp
+  [0,  0,  0,  1,  3,  3,  2,  1,  1,  0,  0],
+  // Cartier              — Tank/Roadster steel + gold haute
+  [0,  0,  0,  2,  3,  2,  1,  1,  0,  0,  0],
+  // Chanel               — J12 ceramic + jewelled gold
+  [0,  0,  0,  1,  3,  2,  1,  1,  0,  0,  0],
+]
+
+// MaterialsTileBubbles — per-row brand counts.
+// See docs/plans/2026-04-25-v4-bespoke-viz-spec.md, Tile 1.
+export type MaterialBrandCount = { brand: string; count: number }
+export type MaterialBubbleRow = {
+  material: string
+  total: number
+  brands: MaterialBrandCount[]
+}
+
+export const materialBubbles: MaterialBubbleRow[] = [
+  { material: 'Steel', total: 193, brands: [
+    { brand: 'Rolex', count: 32 }, { brand: 'Tudor', count: 24 },
+    { brand: 'Tissot', count: 14 }, { brand: 'IWC', count: 12 },
+    { brand: 'Eberhard & Co.', count: 11 }, { brand: 'Hamilton', count: 10 },
+    { brand: 'Longines', count: 9 }, { brand: 'Oris', count: 8 },
+    { brand: 'TAG Heuer', count: 8 }, { brand: 'Zenith', count: 7 },
+    { brand: 'Bulgari', count: 6 }, { brand: 'Chopard', count: 5 },
+    { brand: 'Hublot', count: 4 }, { brand: 'Other (12)', count: 43 },
+  ]},
+  { material: 'Titanium', total: 56, brands: [
+    { brand: 'IWC', count: 8 }, { brand: 'Tudor', count: 7 },
+    { brand: 'Hublot', count: 6 }, { brand: 'Bvlgari', count: 5 },
+    { brand: 'Panerai', count: 5 }, { brand: 'Zenith', count: 4 },
+    { brand: 'Eberhard & Co.', count: 4 }, { brand: 'Other (9)', count: 17 },
+  ]},
+  { material: 'Rose Gold', total: 53, brands: [
+    { brand: 'Cartier', count: 8 }, { brand: 'Piaget', count: 7 },
+    { brand: 'Chopard', count: 6 }, { brand: 'Patek Philippe', count: 6 },
+    { brand: 'Bvlgari', count: 5 }, { brand: 'Rolex', count: 4 },
+    { brand: 'Vacheron Constantin', count: 4 }, { brand: 'Other (10)', count: 13 },
+  ]},
+  { material: 'White Gold', total: 35, brands: [
+    { brand: 'Patek Philippe', count: 6 }, { brand: 'Vacheron Constantin', count: 5 },
+    { brand: 'A. Lange & Söhne', count: 4 }, { brand: 'Rolex', count: 4 },
+    { brand: 'Piaget', count: 4 }, { brand: 'Audemars Piguet', count: 3 },
+    { brand: 'Other (7)', count: 9 },
+  ]},
+  { material: 'Yellow Gold', total: 22, brands: [
+    { brand: 'Rolex', count: 5 }, { brand: 'Cartier', count: 4 },
+    { brand: 'Bvlgari', count: 3 }, { brand: 'Piaget', count: 3 },
+    { brand: 'Chopard', count: 2 }, { brand: 'Other (5)', count: 5 },
+  ]},
+  { material: 'Ceramic', total: 24, brands: [
+    { brand: 'Hublot', count: 6 }, { brand: 'Audemars Piguet', count: 5 },
+    { brand: 'Chanel', count: 4 }, { brand: 'Bvlgari', count: 3 },
+    { brand: 'Rado', count: 3 }, { brand: 'Other (3)', count: 3 },
+  ]},
+  { material: 'Platinum', total: 15, brands: [
+    { brand: 'Patek Philippe', count: 5 }, { brand: 'A. Lange & Söhne', count: 3 },
+    { brand: 'Vacheron Constantin', count: 3 }, { brand: 'Audemars Piguet', count: 2 },
+    { brand: 'Breguet', count: 2 },
+  ]},
+  { material: 'Other', total: 20, brands: [
+    { brand: 'Hublot', count: 4 }, { brand: 'Richard Mille', count: 3 },
+    { brand: 'Panerai', count: 3 }, { brand: 'Bvlgari', count: 2 },
+    { brand: 'Bell & Ross', count: 2 }, { brand: 'Other (8)', count: 6 },
+  ]},
+]
+
+// Movement family × complication crosstab for the sunburst.
+// One watch can have multiple complications; counts may exceed novelties.
+export type ComplicationByFamily = {
+  name: string
+  auto: number
+  manual: number
+  quartz: number
+  total: number
+}
+
+export const complicationsByMovement: ComplicationByFamily[] = [
+  { name: 'Date',                auto: 142, manual: 48, quartz: 20, total: 210 },
+  { name: 'Sweeping Seconds',    auto: 134, manual: 22, quartz: 0,  total: 156 },
+  { name: 'Hacking Seconds',     auto: 38,  manual: 10, quartz: 0,  total: 48  },
+  { name: 'Power Reserve',       auto: 11,  manual: 5,  quartz: 0,  total: 16  },
+  { name: 'Chronograph',         auto: 14,  manual: 2,  quartz: 0,  total: 16  },
+  { name: 'Moon Phase',          auto: 12,  manual: 6,  quartz: 0,  total: 18  },
+  { name: 'Day/Night Indicator', auto: 11,  manual: 2,  quartz: 0,  total: 13  },
+  { name: 'Tourbillon',          auto: 7,   manual: 4,  quartz: 0,  total: 11  },
+  { name: 'Flyback Chronograph', auto: 6,   manual: 1,  quartz: 0,  total: 7   },
+  { name: 'Calendar',            auto: 5,   manual: 1,  quartz: 0,  total: 6   },
+]
+
+// Heights bucketed for the V4 profile strip. Sums of caseHeights[] entries.
+export type HeightBucket = {
+  key: string         // 'ultra-slim'
+  mmLabel: string     // '6–7mm'
+  mmMid: number       // for height encoding, px = mmMid * 3
+  count: number
+}
+
+export const heightBuckets: HeightBucket[] = [
+  { key: 'ultra-slim', mmLabel: '6–7mm',   mmMid: 6.5,  count: 119 },
+  { key: 'slim',       mmLabel: '8–9mm',   mmMid: 8.5,  count: 90  },
+  { key: 'standard',   mmLabel: '10–11mm', mmMid: 10.5, count: 81  },
+  { key: 'sport',      mmLabel: '12–13mm', mmMid: 12.5, count: 62  },
+  { key: 'chunky',     mmLabel: '14mm',    mmMid: 14,   count: 29  },
+  { key: 'extreme',    mmLabel: '15+mm',   mmMid: 15.5, count: 11  },
+]
+
+// Editor's Notes for V4 flagship tiles. Cormorant italic 18px presentation.
+// Voice = Phillips × Hodinkee. Present-state observations only — no dated
+// claims like "first time since 2022" / "tightest in five editions" because
+// they can't be verified from page data. See voice spec for portfolio.
+export const editorNotes = {
+  // Rewrite of A2 (present-state) — Datejust dominance + named comparison.
+  brands:
+    'Datejust alone accounts for 41 novelties — more than Patek, IWC, and Piaget put together.',
+  // Rewrite of B6 (present-state) — corridor hollowing-out, no dated assertion.
+  marketMap:
+    'The corridor between $25K and $100K has thinned into a band where most maisons leave only one or two flags.',
+  // Rewrite of C2 (present-state) — single bracket out-weighing two flanks.
+  price:
+    'The $10–25K bucket alone takes 102 references — more than the entire sub-$5K and over-$100K halves combined.',
+} as const
+
 // Headline insights — derived "so what" cards
 export const insights = [
   { big: '105',   unit: 'novelties',       headline: 'Blue is the colour of 2026',     sub: '22% of the fair — twice as many as black.' },

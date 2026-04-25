@@ -58,7 +58,7 @@ export default function BrandsTileD() {
               </div>
             </div>
             <span className="num text-[14px] tabular-nums text-ink">{fmt(b.count)}</span>
-            <DeltaChip delta={b.delta} />
+            <DeltaChip delta={b.delta} count={b.count} />
           </li>
         ))}
       </ul>

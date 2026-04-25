@@ -56,7 +56,7 @@ export default function CollectionsTileB() {
                 </div>
               </div>
               <span className="num text-[14px] tabular-nums text-ink">{fmt(c.count)}</span>
-              <DeltaChip delta={c.delta} />
+              <DeltaChip delta={c.delta} count={c.count} />
             </li>
           )
         })}

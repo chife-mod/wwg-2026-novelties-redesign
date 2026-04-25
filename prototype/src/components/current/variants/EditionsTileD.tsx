@@ -112,7 +112,7 @@ export default function EditionsTileD() {
               {e.name.replace(' Edition', '')}
             </span>
             <span className="num text-[14px] tabular-nums text-ink">{e.count}</span>
-            <DeltaChip delta={e.delta ?? 0} />
+            <DeltaChip delta={e.delta ?? 0} count={e.count} />
           </li>
         ))}
       </ul>

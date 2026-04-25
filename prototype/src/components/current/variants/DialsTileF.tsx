@@ -93,7 +93,7 @@ export default function DialsTileF() {
                 </div>
               </div>
               <span className="num text-[14px] tabular-nums text-ink">{d.count}</span>
-              <DeltaChip delta={d.delta ?? 0} />
+              <DeltaChip delta={d.delta ?? 0} count={d.count} />
             </li>
           )
         })}

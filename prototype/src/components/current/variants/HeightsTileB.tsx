@@ -50,7 +50,7 @@ export default function HeightsTileB() {
               </div>
             </div>
             <span className="num text-[14px] tabular-nums text-ink">{h.count}</span>
-            <DeltaChip delta={h.delta ?? 0} />
+            <DeltaChip delta={h.delta ?? 0} count={h.count} />
           </li>
         ))}
       </ul>

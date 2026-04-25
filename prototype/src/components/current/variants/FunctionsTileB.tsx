@@ -45,7 +45,7 @@ export default function FunctionsTileB() {
               </div>
             </div>
             <span className="num text-[14px] tabular-nums text-ink">{f.count}</span>
-            <DeltaChip delta={f.delta ?? 0} />
+            <DeltaChip delta={f.delta ?? 0} count={f.count} />
           </li>
         ))}
       </ul>

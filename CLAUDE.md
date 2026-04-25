@@ -30,7 +30,17 @@ Watch360 — premium аналитическая платформа по часо
 **Стратегия:** строим по одной версии за раз, разбираем, потом следующая. НЕ три
 параллельно (выжигает токены, сложно править).
 
-**Сейчас в работе:** V1 (Editorial Cover Story). Остальные — отложены.
+**Текущее состояние (2026-04-25):** пять вариантов на одном прототипе, переключаются hash-роутингом и top-strip свитчером. Дефолт по загрузке = V5 (новейшая, leftmost).
+
+| Slug | Что | Code dir |
+|------|-----|----------|
+| `/v1` | Editorial Report (исходная cover-story) | `components/` (top-level) |
+| `/v2` | The Window — hero-slider + sticky-collection rail | `components/V2RightGrid.tsx` |
+| `/v3` | Current — canonical tile-variant sandbox page | `components/current/` |
+| `/v4` | Editorial+ — heatmap MarketMap + bespoke viz | `components/v4/` |
+| `/v5` | V3 + Price slot заменён на MarketMap, левая часть с brand-dropdown | `components/v5/` |
+
+VersionSwitcher показывает их в обратном порядке: `[V5] [V4] [V3] [V2] [V1]`. Без подписей, без keyboard shortcuts (sняты — никто не использовал).
 
 ## Stack
 

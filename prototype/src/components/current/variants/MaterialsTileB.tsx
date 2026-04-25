@@ -68,7 +68,7 @@ export default function MaterialsTileB() {
               </div>
             </div>
             <span className="num text-[14px] tabular-nums text-ink">{m.count}</span>
-            <DeltaChip delta={m.delta ?? 0} />
+            <DeltaChip delta={m.delta ?? 0} count={m.count} />
           </li>
         ))}
       </ul>

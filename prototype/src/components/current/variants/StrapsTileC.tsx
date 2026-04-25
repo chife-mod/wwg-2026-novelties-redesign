@@ -86,7 +86,7 @@ export default function StrapsTileC() {
               </div>
             </div>
             <span className="num text-[14px] tabular-nums text-ink">{s.count}</span>
-            <DeltaChip delta={s.delta ?? 0} />
+            <DeltaChip delta={s.delta ?? 0} count={s.count} />
           </li>
         ))}
       </ul>

@@ -130,11 +130,11 @@ export default function DiameterTileD() {
         })}
       </div>
 
-      {/* YoY delta chips */}
+      {/* YoY delta chips. absDelta — для Count/% toggle (число vs процент). */}
       <div className="mt-2 flex gap-2">
         {deltas.map((pct, i) => (
           <div key={i} className="flex flex-1 justify-center">
-            <DeltaChipPct pct={pct} />
+            <DeltaChipPct pct={pct} absDelta={counts26[i] - counts25[i]} />
           </div>
         ))}
       </div>

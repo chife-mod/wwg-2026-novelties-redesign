@@ -15,6 +15,8 @@ import V2RightGrid from './components/V2RightGrid'
 import CurrentRightGrid from './components/current/CurrentRightGrid'
 import BrandsTileD from './components/current/variants/BrandsTileD'
 import BrandsTileD1 from './components/current/variants/BrandsTileD1'
+import V4 from './components/v4/V4'
+import V5 from './components/v5/V5'
 import { ViewModeProvider } from './components/ViewModeContext'
 import ViewModeToggle from './components/ViewModeToggle'
 import {
@@ -243,6 +245,16 @@ function Current() {
   return <CurrentHero />
 }
 
+// Hash-route helpers — minimal viable URL routing so each variant is shareable.
+// Accepts: '#/v1' … '#/v5' (and tolerates legacy '#/current' → v3).
+const VALID_VERSIONS: Version[] = ['v1', 'v2', 'v3', 'v4', 'v5']
+function versionFromHash(): Version | null {
+  if (typeof window === 'undefined') return null
+  const raw = window.location.hash.replace(/^#\/?/, '').toLowerCase()
+  if (raw === 'current') return 'v3'
+  return (VALID_VERSIONS as string[]).includes(raw) ? (raw as Version) : null
+}
+
 // Preview-route для экспорта в Figma: ?preview=brands-d рендерит
 // одну плитку BrandsTileD на тёмном фоне (чтобы shadow читалась),
 // без nav/hero/switcher. Ширина колонки ≈ реальная на дашборде
@@ -273,22 +285,31 @@ export default function App() {
     )
   }
 
-  const [version, setVersion] = useState<Version>('current')
+  // Initial version: hash → state, default to v5 (newest, leftmost in switcher).
+  const [version, setVersion] = useState<Version>(() => versionFromHash() ?? 'v5')
 
+  // Sync hash → state on hashchange (back/forward, manual edit).
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.target && (e.target as HTMLElement).closest('input, textarea')) return
-      if (e.key === '1') setVersion('current')
-      if (e.key === '2') setVersion('v1')
-      if (e.key === '3') setVersion('v2')
+    const onHashChange = () => {
+      const v = versionFromHash()
+      if (v) setVersion(v)
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
-  // Root bg — dark chocolate на версиях, где герой тёмный (current/v2).
-  // Иначе на скролле между hero и FooterStrip'ом виден paper-seam 48px
-  // (mt-12 у footer'а). На V1 (editorial page на paper) — остаётся paper.
+  // Sync state → hash so each variant gets a shareable URL.
+  useEffect(() => {
+    const desired = `#/${version}`
+    if (window.location.hash !== desired) {
+      window.history.replaceState(null, '', desired)
+    }
+  }, [version])
+
+  // Keyboard shortcuts removed per Oleg 2026-04-25 — nobody used them.
+
+  // Root bg — dark chocolate на версиях с тёмным героем (v2/v3/v4/v5).
+  // На V1 (editorial page на paper) — остаётся paper.
   const rootBg = version === 'v1' ? '#EEEDEC' : '#1F140C'
 
   return (
@@ -298,7 +319,9 @@ export default function App() {
         <Nav />
         {version === 'v1' && <V1 />}
         {version === 'v2' && <V2 />}
-        {version === 'current' && <Current />}
+        {version === 'v3' && <Current />}
+        {version === 'v4' && <V4 />}
+        {version === 'v5' && <V5 />}
         <FooterStrip />
       </div>
     </ViewModeProvider>

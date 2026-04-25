@@ -1,27 +1,28 @@
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import logoManifest from '../assets/logos-manifest.json'
 import { useViewMode } from './ViewModeContext'
 import { TOTAL_NOVELTIES } from '../data'
 
 /**
- * formatCount — универсальный helper для distribution-чисел.
- * Возвращает либо абсолютное число ('58'), либо долю от total ('12%').
- * Использует глобальный ViewMode через useViewMode().
- * total по умолчанию — TOTAL_NOVELTIES (478); можно override'ить
- * для тайлов со своим знаменателем (напр., price bucket vs total brand count).
+ * formatCount — universal helper for distribution numbers.
+ *
+ * REVISED 2026-04-25 (Oleg, third time):
+ * The Count/% toggle does NOT change main values anymore. "58 novelties for
+ * Rolex" stays "58" in BOTH modes — it's a count, not a share, and switching
+ * to % loses the sense of scale. The toggle's effect now lives ONLY in delta
+ * chips (DeltaChip, DeltaChipPct), where "+8 novelties" vs "+16% growth"
+ * carry equivalent meaning.
+ *
+ * This function therefore always returns the raw count. Kept as a hook (not
+ * a plain `String()` call) to preserve every call site without churn — and to
+ * leave a single place to revisit if a future viz needs share-of-total again.
+ *
+ * The `total` parameter is kept for signature compatibility but unused.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useFormatCount() {
-  const { mode } = useViewMode()
-  return (count: number, total: number = TOTAL_NOVELTIES) => {
-    if (mode === 'pct') {
-      const pct = (count / total) * 100
-      // Округляем до целого, если >= 10%, иначе до 0.1 — мелкие бакеты
-      // теряют смысл при целом округлении (2/478 = 0.4% → 0% неинформативно).
-      const digits = pct >= 10 ? 0 : 1
-      return `${pct.toFixed(digits)}%`
-    }
-    return String(count)
-  }
+  // mode no longer affects count rendering; deltas carry the toggle.
+  return (count: number, _total: number = TOTAL_NOVELTIES) => String(count)
 }
 
 // Сгенерирован scripts/download_logos.cjs. Формат:
@@ -65,33 +66,74 @@ export function SectionTitle({
   )
 }
 
-export function DeltaChip({ delta }: { delta?: number }) {
+/**
+ * DeltaChip — count-delta chip (e.g., "+8", "-2", "±0").
+ *
+ * REACTIVE TO ViewMode (added 2026-04-25):
+ *   - mode='count' (default): render the absolute number "+8".
+ *   - mode='pct' AND `count` (current value) provided: compute relative
+ *     growth as delta / (count - delta) × 100 and render "+16%".
+ *   - mode='pct' but no `count`: graceful fallback to absolute delta.
+ *
+ * Pass `count` everywhere data allows (Brands/Collections/etc. — Ranked has
+ * both `count` and `delta`). The chip then honours the global toggle.
+ */
+export function DeltaChip({ delta, count }: { delta?: number; count?: number }) {
+  const { mode } = useViewMode()
   if (delta === undefined) return null
-  const up = delta > 0
-  const flat = delta === 0
+
+  // Compute % when toggle is in pct mode AND we have base data.
+  let pct: number | null = null
+  if (mode === 'pct' && count !== undefined) {
+    const base = count - delta
+    if (base > 0) {
+      pct = Math.round((delta / base) * 100)
+    } else if (base === 0 && delta > 0) {
+      pct = 100 // brand-new appearance: 0 → N = "+100%" floor
+    }
+  }
+
+  const value = pct ?? delta
+  const up = value > 0
+  const flat = value === 0
   const sign = up ? '+' : flat ? '±' : ''
-  const bg = up ? 'bg-success/15 text-success' : flat ? 'bg-ink/5 text-mute-3' : 'bg-error/15 text-error'
+  const bg = up
+    ? 'bg-success/15 text-success'
+    : flat
+    ? 'bg-ink/5 text-mute-3'
+    : 'bg-error/15 text-error'
+
   return (
     <span className={`num inline-flex min-w-[42px] items-center justify-center rounded-sm px-1.5 py-1 text-[11px] font-medium leading-none tabular-nums ${bg}`}>
       {sign}
-      {delta}
+      {value}
+      {pct !== null && '%'}
     </span>
   )
 }
 
 /**
- * DeltaChipPct — та же плашка, что DeltaChip, но с `%`-суффиксом.
- * Единый компонент для histogram-тайлов (Price/Diameter), которые
- * показывают YoY-проценты, и для BrandsTileD1 (stress-test).
+ * DeltaChipPct — percent-delta chip (e.g., "+12%", "-7%").
+ *
+ * REACTIVE TO ViewMode (added 2026-04-25):
+ *   - mode='pct' (default): render "+12%".
+ *   - mode='count' AND `absDelta` provided: render absolute "+8".
+ *   - mode='count' but no `absDelta`: graceful fallback to percent.
+ *
+ * Used by histogram-style tiles (Price/Diameter) where the source data is
+ * already a YoY percent. Pass `absDelta` (count2026 - count2025) where
+ * available so the toggle's count mode shows raw novelty deltas.
  *
  * Типографика и габариты (min-w 42, py-1, leading-none, items-center)
  * ИДЕНТИЧНЫ DeltaChip — это намеренно: пользователь привыкает к одной
- * форме дельты на всём дашборде. Меняется только контент: absolute number
- * (DeltaChip) vs percent (DeltaChipPct).
+ * форме дельты на всём дашборде.
  */
-export function DeltaChipPct({ pct }: { pct: number }) {
-  const up = pct > 0
-  const flat = pct === 0
+export function DeltaChipPct({ pct, absDelta }: { pct: number; absDelta?: number }) {
+  const { mode } = useViewMode()
+  const useAbs = mode === 'count' && absDelta !== undefined
+  const value = useAbs ? absDelta! : pct
+  const up = value > 0
+  const flat = value === 0
   const sign = up ? '+' : flat ? '±' : ''
   const bg = up
     ? 'bg-success/15 text-success'
@@ -103,7 +145,8 @@ export function DeltaChipPct({ pct }: { pct: number }) {
       className={`num inline-flex min-w-[42px] items-center justify-center rounded-sm px-1.5 py-1 text-[11px] font-medium leading-none tabular-nums ${bg}`}
     >
       {sign}
-      {pct}%
+      {value}
+      {!useAbs && '%'}
     </span>
   )
 }
@@ -158,6 +201,69 @@ export function BrandLogo({ name, size = 28 }: { name: string; size?: number }) 
         className="max-h-full max-w-full object-contain"
         loading="lazy"
       />
+    </div>
+  )
+}
+
+/**
+ * DataTooltip — ink-deep arrow tooltip used across V4 viz tiles.
+ * Visually identical to the inline PriceTileD tooltip shell (rounded-sm,
+ * bg-ink-deep, ±rotated-square arrow). Consumer is responsible for the
+ * outer absolute positioning; this is the inner card.
+ *
+ * `arrow` controls which side the rotated-square caret pokes out:
+ *   'bottom' — arrow at bottom centre (tooltip floats above its anchor)
+ *   'top'    — arrow at top centre (tooltip floats below its anchor)
+ *   'none'   — no arrow (e.g. when tooltip is far from the cursor anchor)
+ */
+export function DataTooltip({
+  children,
+  arrow = 'bottom',
+  className = '',
+  style,
+}: {
+  children: ReactNode
+  arrow?: 'top' | 'bottom' | 'none'
+  className?: string
+  style?: CSSProperties
+}) {
+  return (
+    <div
+      className={`relative rounded-sm bg-ink-deep px-2.5 py-1 shadow-[0_8px_20px_rgba(0,0,0,0.25)] ${className}`}
+      style={style}
+    >
+      {children}
+      {arrow === 'bottom' && (
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-ink-deep"
+        />
+      )}
+      {arrow === 'top' && (
+        <span
+          aria-hidden
+          className="absolute left-1/2 bottom-full h-2 w-2 -translate-x-1/2 translate-y-1 rotate-45 bg-ink-deep"
+        />
+      )}
+    </div>
+  )
+}
+
+/**
+ * EditorNote — Cormorant italic 18px paragraph below a tile's chart.
+ * Top hairline separates it from the chart. Used by V4 flagship tiles
+ * (Brands, MarketMap, Price). The font shift IS the marker — no eyebrow,
+ * no badge, no "Insight" label (per V4 §4 / §7 anti-list).
+ */
+export function EditorNote({ text }: { text: string }) {
+  return (
+    <div className="mt-4 border-t border-ink/10 pt-4">
+      <p
+        className="text-[18px] italic leading-[1.4] text-ink/70"
+        style={{ fontFamily: '"Cormorant Garamond", Georgia, serif' }}
+      >
+        {text}
+      </p>
     </div>
   )
 }

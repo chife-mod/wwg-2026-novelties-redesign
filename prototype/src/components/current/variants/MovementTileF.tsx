@@ -195,7 +195,7 @@ export default function MovementTileF() {
             />
             <span className="truncate text-[14px] leading-none text-ink">{m.name}</span>
             <span className="num text-[14px] tabular-nums text-ink">{m.count}</span>
-            <DeltaChip delta={m.delta ?? 0} />
+            <DeltaChip delta={m.delta ?? 0} count={m.count} />
           </li>
         ))}
       </ul>
