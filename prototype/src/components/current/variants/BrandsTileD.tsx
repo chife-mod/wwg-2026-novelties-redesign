@@ -1,5 +1,5 @@
 import { brands } from '../../../data'
-import { BrandLogo, DeltaChip, useFormatCount } from '../../common'
+import { BrandLogo, DeltaChip, ShowMoreButton, useFormatCount } from '../../common'
 
 /**
  * Variant D — короче, мягче, «эдиториал».
@@ -17,7 +17,7 @@ import { BrandLogo, DeltaChip, useFormatCount } from '../../common'
  *      бар остался той же ширины (колонка гибкая, не зависит от лого).
  */
 export default function BrandsTileD() {
-  const list = brands.slice(0, 6)
+  const list = brands.slice(0, 10)
   const max = list[0].count
   const fmt = useFormatCount()
 
@@ -62,6 +62,7 @@ export default function BrandsTileD() {
           </li>
         ))}
       </ul>
+      <ShowMoreButton total={brands.length} shown={list.length} />
     </article>
   )
 }

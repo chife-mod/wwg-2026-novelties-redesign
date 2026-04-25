@@ -18,7 +18,7 @@ import MarketMapTile from '../../v4/MarketMapTile'
 export default function MarketMapLarge() {
   return (
     <MarketMapTile
-      title="Price ranges"
+      title="Market map"
       showNote={false}
       topN={10}
       rowHeight={32}

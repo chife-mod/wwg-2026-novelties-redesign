@@ -67,6 +67,32 @@ export function SectionTitle({
 }
 
 /**
+ * ShowMoreButton — bottom-of-list text affordance.
+ *
+ * Style (revised 2026-04-25 per Oleg): text-only, NOT a full-width button.
+ * Centered text with leading "+" icon — universal "expand" affordance, plays
+ * better than an arrow which read as "navigate to next page". Hover → gold.
+ *
+ * Click bubbles up to TileShell which opens the sandbox — no own onClick.
+ */
+export function ShowMoreButton({ total, shown }: { total: number; shown: number }) {
+  const truncated = total > shown
+  return (
+    <div className="mt-4 flex justify-center">
+      <button
+        type="button"
+        className="num inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-eyebrow text-mute-3 transition-colors hover:text-gold"
+      >
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden>
+          <path d="M5.5 1.5v8M1.5 5.5h8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+        <span>{truncated ? `Show all ${total}` : 'Show more'}</span>
+      </button>
+    </div>
+  )
+}
+
+/**
  * DeltaChip — count-delta chip (e.g., "+8", "-2", "±0").
  *
  * REACTIVE TO ViewMode (added 2026-04-25):

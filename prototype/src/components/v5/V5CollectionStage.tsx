@@ -299,14 +299,13 @@ export default function V5CollectionStage() {
                       e.stopPropagation()
                       selectBrand(i)
                     }}
-                    className={`flex w-full items-center justify-between px-3 py-2 text-left text-[12px] uppercase tracking-eyebrow transition-colors ${
+                    className={`flex w-full items-center px-3 py-2 text-left text-[12px] font-semibold uppercase tracking-eyebrow transition-colors ${
                       on
                         ? 'bg-gold/15 text-gold'
                         : 'text-mute-2 hover:bg-white/5 hover:text-paper'
                     }`}
                   >
-                    <span className="font-semibold">{s.brand}</span>
-                    <span className="num text-[10px] tabular-nums text-mute-3">{s.name}</span>
+                    {s.brand}
                   </button>
                 </li>
               )

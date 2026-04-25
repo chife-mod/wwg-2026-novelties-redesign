@@ -1,12 +1,11 @@
 import MarketMapTile from '../../v4/MarketMapTile'
 
 /**
- * Default Price-ranges heatmap for V5 — same as V4's MarketMap but
- * relabelled "Price ranges" and stripped of the editorial Note.
+ * Default Market-map heatmap for V5 — same as V4's MarketMap, no editorial Note.
  *
  * Top 12 brands × 11 buckets, 22px rows, 18px logos, 12px brand labels.
- * Compact and dense — what's currently shipped on the V5 front.
+ * Compact and dense — sandbox-only secondary variant in V5.
  */
 export default function MarketMapDefault() {
-  return <MarketMapTile title="Price ranges" showNote={false} />
+  return <MarketMapTile title="Market map" showNote={false} />
 }

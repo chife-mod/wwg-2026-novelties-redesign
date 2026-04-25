@@ -9,21 +9,19 @@ import MarketMapLarge from './variants/MarketMapLarge'
 const ACTIVE_KEY = 'wwg.current.activeVariants.v2'
 const SANDBOX_KEY = 'wwg.current.openTileId'
 
-// V5 owns its own ad-hoc "price" tile entry — two MarketMap variants instead
-// of the V3 PriceTileD set. Default = compact (current front), Large = wider
-// rows + no logos for the sandbox compare view.
-const v5PriceTile: TileEntry = {
-  id: 'v5-price',
-  label: 'Price ranges',
-  kicker: 'Price',
+// V5 owns its own ad-hoc "Market map" tile entry — heatmap viz, two variants.
+// Default = wider/no-logos, Compact = with-logos sandbox-secondary.
+// Renamed back to "Market map" 2026-04-25 (Oleg) — Price ranges slot is now
+// occupied by the original V3 PriceTileD histogram, which sits ABOVE this one.
+const v5MarketMapTile: TileEntry = {
+  id: 'v5-market-map',
+  label: 'Market map',
+  kicker: 'Market map',
   colSpan: 2,
-  // Order = front-default first. Promoted Large to front 2026-04-25
-  // (Oleg: "wider, без логотипов, $250K+ должен влезать"). Compact-with-logos
-  // demoted to sandbox-only as the alternative reading.
   variants: [
     {
       key: 'A',
-      label: 'Default · top 10, no logos, 36px rows, wider buckets',
+      label: 'Default · top 10, no logos, wider buckets ($250K+ fits)',
       component: MarketMapLarge,
     },
     {
@@ -75,8 +73,17 @@ export default function V5RightGrid() {
     }
   }, [openTileId])
 
-  // All tiles know which entry they are. Map by id for sandbox lookup.
-  const allTiles: TileEntry[] = TILES.map((t) => (t.id === 'price' ? v5PriceTile : t))
+  // V5 layout (Oleg 2026-04-25): Market map FIRST, Price ranges histogram
+  // SECOND. We insert v5MarketMapTile BEFORE the original 'price' tile, so
+  // the heatmap (the V5 signature viz) leads, and the YoY histogram sits
+  // right under it as the supporting cross-cut. Both `colSpan: 2`.
+  const allTiles: TileEntry[] = []
+  for (const t of TILES) {
+    if (t.id === 'price') {
+      allTiles.push(v5MarketMapTile)
+    }
+    allTiles.push(t)
+  }
 
   const cycle = (tileId: string, direction: -1 | 1) => {
     const tile = allTiles.find((t) => t.id === tileId)

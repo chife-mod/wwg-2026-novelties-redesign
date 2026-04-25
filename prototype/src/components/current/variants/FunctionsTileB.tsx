@@ -1,5 +1,5 @@
 import { functions } from '../../../data'
-import { DeltaChip } from '../../common'
+import { DeltaChip, ShowMoreButton } from '../../common'
 
 /**
  * Variant B — редакторская плитка как brands/collections/straps/dials.
@@ -17,7 +17,7 @@ import { DeltaChip } from '../../common'
  * Delta — placeholder YoY в data.functions.
  */
 export default function FunctionsTileB() {
-  const list = functions.slice(0, 6)
+  const list = functions.slice(0, 10)
   const max = list[0].count
 
   return (
@@ -49,6 +49,7 @@ export default function FunctionsTileB() {
           </li>
         ))}
       </ul>
+      <ShowMoreButton total={functions.length} shown={list.length} />
     </article>
   )
 }

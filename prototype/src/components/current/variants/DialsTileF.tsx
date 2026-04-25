@@ -1,5 +1,5 @@
 import { dialColors } from '../../../data'
-import { DeltaChip } from '../../common'
+import { DeltaChip, ShowMoreButton } from '../../common'
 
 /**
  * Variant F — E с sausage СВЕРХУ под заголовком (не снизу).
@@ -24,7 +24,7 @@ import { DeltaChip } from '../../common'
  *   3. 6-строчный top-list с rank + swatch + name + bar + count + delta.
  */
 export default function DialsTileF() {
-  const list = dialColors.slice(0, 6)
+  const list = dialColors.slice(0, 10)
   const max = list[0].count
   const total = dialColors.reduce((sum, d) => sum + d.count, 0)
 
@@ -98,6 +98,7 @@ export default function DialsTileF() {
           )
         })}
       </ul>
+      <ShowMoreButton total={dialColors.length} shown={list.length} />
     </article>
   )
 }

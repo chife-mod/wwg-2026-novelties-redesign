@@ -1,5 +1,5 @@
 import { caseHeights } from '../../../data'
-import { DeltaChip } from '../../common'
+import { DeltaChip, ShowMoreButton } from '../../common'
 
 /**
  * Variant B — редакторская плитка как functions/materials/straps/dials.
@@ -54,6 +54,7 @@ export default function HeightsTileB() {
           </li>
         ))}
       </ul>
+      <ShowMoreButton total={caseHeights.length} shown={list.length} />
     </article>
   )
 }

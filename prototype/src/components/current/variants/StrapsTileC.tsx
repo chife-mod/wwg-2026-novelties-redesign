@@ -1,5 +1,5 @@
 import { strapTypes } from '../../../data'
-import { DeltaChip } from '../../common'
+import { DeltaChip, ShowMoreButton } from '../../common'
 
 /**
  * Variant C — StrapsTileB с полноширинной sausage СВЕРХУ под title.
@@ -34,7 +34,7 @@ const STRAP_SWATCH: Record<string, string> = {
 }
 
 export default function StrapsTileC() {
-  const list = strapTypes.slice(0, 6)
+  const list = strapTypes.slice(0, 10)
   const max = list[0].count
   const total = strapTypes.reduce((sum, s) => sum + s.count, 0)
 
@@ -90,6 +90,7 @@ export default function StrapsTileC() {
           </li>
         ))}
       </ul>
+      <ShowMoreButton total={strapTypes.length} shown={list.length} />
     </article>
   )
 }

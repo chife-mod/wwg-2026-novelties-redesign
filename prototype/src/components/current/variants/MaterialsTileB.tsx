@@ -1,5 +1,5 @@
 import { caseMaterials } from '../../../data'
-import { DeltaChip } from '../../common'
+import { DeltaChip, ShowMoreButton } from '../../common'
 
 /**
  * Variant B — редакторская плитка как brands/collections/straps/dials.
@@ -35,7 +35,7 @@ const MATERIAL_SWATCH: Record<string, string> = {
 }
 
 export default function MaterialsTileB() {
-  const list = caseMaterials.slice(0, 6)
+  const list = caseMaterials.slice(0, 10)
   const max = list[0].count
 
   return (
@@ -72,6 +72,7 @@ export default function MaterialsTileB() {
           </li>
         ))}
       </ul>
+      <ShowMoreButton total={caseMaterials.length} shown={list.length} />
     </article>
   )
 }
