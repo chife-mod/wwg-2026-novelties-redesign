@@ -190,8 +190,9 @@ export default function V5CollectionStage() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target && (e.target as HTMLElement).closest('input, textarea')) return
-      if (e.key === 'ArrowLeft') next()
-      else if (e.key === 'ArrowRight') prev()
+      // Standard convention: ← previous, → next.
+      if (e.key === 'ArrowLeft') prev()
+      else if (e.key === 'ArrowRight') next()
       else if (e.key === 'Escape') setDropdownOpen(false)
     }
     window.addEventListener('keydown', onKey)
@@ -333,9 +334,11 @@ export default function V5CollectionStage() {
           </AnimatePresence>
         </div>
         <div className="flex items-center gap-2">
+          {/* Standard convention: left chevron = prev, right chevron = next.
+              Inverted earlier; reverted 2026-04-25 per Oleg. */}
           <button
             type="button"
-            onClick={next}
+            onClick={prev}
             aria-label="Previous"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-paper transition hover:border-gold hover:bg-gold hover:text-ink-deep"
           >
@@ -343,7 +346,7 @@ export default function V5CollectionStage() {
           </button>
           <button
             type="button"
-            onClick={prev}
+            onClick={next}
             aria-label="Next"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-paper transition hover:border-gold hover:bg-gold hover:text-ink-deep"
           >
