@@ -139,10 +139,10 @@ function AnimatedNumber({ value }: { value: number }) {
 function ModelStat({ value, label }: { value: number; label: string }) {
   return (
     <div className="border-l border-white/25 pl-3">
-      <div className="num text-[28px] font-light leading-none text-paper tabular-nums">
+      <div className="num text-[22px] font-light leading-none text-paper tabular-nums">
         <AnimatedNumber value={value} />
       </div>
-      <div className="mt-1.5 text-[10px] uppercase tracking-eyebrow text-mute-2">
+      <div className="mt-1 text-[10px] uppercase tracking-eyebrow text-mute-2">
         {label}
       </div>
     </div>
@@ -219,12 +219,12 @@ export default function V5CollectionStage() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Photo zone — explicit 400px height (was flex-1, which created 68px
-          of empty space above the image when self-end-aligned). Now the
-          container IS the image height, no padding above or below. The block
-          starts at the very top of the aside, hugging "Novelties" headline. */}
+      {/* Photo zone — explicit 300px height (was 400px). Reduced 2026-04-26
+          per Oleg/client: aside content (~590px) was overflowing on 13"
+          laptops; metrics row got cut by viewport fold. -100px on photo +
+          tighter metrics + tighter mt's → aside ~470px, fits everywhere. */}
       <div
-        className="relative grid h-[400px] cursor-pointer place-items-center"
+        className="relative grid h-[300px] cursor-pointer place-items-center"
         onClick={next}
         role="button"
         tabIndex={-1}
@@ -240,7 +240,7 @@ export default function V5CollectionStage() {
             animate="center"
             exit="exit"
             style={{ gridArea: '1 / 1' }}
-            className="h-full max-h-[400px] w-auto object-contain"
+            className="h-full max-h-[300px] w-auto object-contain"
             alt={`${c.brand} ${c.name} — representative`}
             draggable={false}
           />
@@ -249,7 +249,7 @@ export default function V5CollectionStage() {
 
       {/* Below photo — eyebrow + 01/10 pagination on one line, baseline-aligned.
           Both 11px uppercase eyebrow type so they read as a single strip. */}
-      <div className="mt-5 flex items-baseline justify-between text-[11px] uppercase tracking-eyebrow text-mute-2">
+      <div className="mt-3 flex items-baseline justify-between text-[11px] uppercase tracking-eyebrow text-mute-2">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-gold" />
           <span>Most Covered Novelties</span>
@@ -320,7 +320,7 @@ export default function V5CollectionStage() {
           already shown in the dropdown selector right above; repeating it
           here was visual noise (Bulgari twice in 40px). Editorial title is
           just the model name now. */}
-      <div className="mt-3 flex items-center gap-4">
+      <div className="mt-2 flex items-center gap-4">
         <div className="grid min-w-0 flex-1 grid-cols-[1fr]">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
@@ -362,7 +362,7 @@ export default function V5CollectionStage() {
           numbers tween from previous → new value (AnimatedNumber inside
           ModelStat). Per Oleg 2026-04-25: smooth count-up like 20→19→18,
           not a fade in/out of the whole block. */}
-      <div className="mt-3 grid grid-cols-3 gap-4">
+      <div className="mt-2 grid grid-cols-3 gap-4">
         <ModelStat value={c.articles}  label="Articles" />
         <ModelStat value={c.sources}   label="Sources" />
         <ModelStat value={c.countries} label="Countries" />
