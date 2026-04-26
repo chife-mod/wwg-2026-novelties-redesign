@@ -101,7 +101,7 @@ export default function V5() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 items-end gap-10 pb-6 pt-6 lg:grid-cols-[440px_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 items-end gap-10 pb-5 pt-6 lg:grid-cols-[440px_minmax(0,1fr)]">
           <h1 className="text-[72px] font-light leading-[0.94] tracking-tight text-paper md:text-[96px]">
             Novelties
           </h1>
@@ -114,7 +114,10 @@ export default function V5() {
         </div>
 
         <div className="grid grid-cols-1 gap-10 pb-20 lg:grid-cols-[440px_minmax(0,1fr)]">
-          <aside className="lg:sticky lg:top-20 lg:self-start" style={{ maxHeight: 'calc(100vh - 96px)' }}>
+          {/* Aside is content-driven — V5CollectionStage внутри сам рендерит
+              ~580px (photo 400 + non-photo ~180). Без фиксированной высоты
+              нет пустого места ни сверху ни снизу. Sticky top-16 = под nav. */}
+          <aside className="lg:sticky lg:top-16 lg:self-start">
             <V5CollectionStage />
           </aside>
           <div className="min-w-0">

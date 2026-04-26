@@ -8,7 +8,7 @@ import DialPalette from './components/DialPalette'
 import DiameterRuler from './components/DiameterRuler'
 import ByTheNumbers from './components/ByTheNumbers'
 import FooterStrip from './components/FooterStrip'
-import VersionSwitcher, { type Version } from './components/VersionSwitcher'
+import { type Version } from './components/VersionSwitcher'
 import { FairBackdrop } from './components/FairWindow'
 import CollectionStage from './components/WatchStage'
 import V2RightGrid from './components/V2RightGrid'
@@ -315,8 +315,9 @@ export default function App() {
   return (
     <ViewModeProvider>
       <div className="min-h-screen text-ink" style={{ background: rootBg }}>
-        <VersionSwitcher active={version} onChange={setVersion} />
-        <Nav />
+        <Nav version={version} onVersionChange={setVersion} />
+        {/* Spacer для fixed Nav (h-16 = 64px). Без него контент уезжает под header. */}
+        <div className="h-16" aria-hidden />
         {version === 'v1' && <V1 />}
         {version === 'v2' && <V2 />}
         {version === 'v3' && <Current />}
